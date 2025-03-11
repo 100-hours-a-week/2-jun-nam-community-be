@@ -1,0 +1,160 @@
+/* Global Styles */
+* {
+    background-color: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    overflow-y: auto;
+  }
+  
+
+.edit-post-header{
+    position: relative; /* 자식 요소의 절대 위치 기준 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 104px;
+    margin: 1vh;
+}
+
+.edit-post-header h1{
+    width: 592px;
+}
+
+.edit-post-header img{
+    position: absolute;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    margin-left: 526px;
+}
+
+.edit-post-header img:hover{
+    cursor: pointer;
+}
+
+#back-button{
+    position: absolute;
+    margin-right: 526px;
+    border: transparent;
+    font-size: 2rem;
+}
+
+.dropdown-menu{
+    display:none;
+    position: absolute;
+    top: 5vh;
+    margin-left: 30vw;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 150px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu ul{
+    list-style: none;
+}
+
+.dropdown-menu li{
+    text-align: center;
+    padding: 0.5rem;
+    background-color: lightgrey;
+}
+
+.dropdown-menu li a{
+    background-color: lightgrey;
+    text-decoration-line: none;
+    color: black;
+}
+
+.edit-post-body{
+    min-height: 90vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-post-title p{
+    margin: 2vh;
+    display: block;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.edit-post-body form{
+    width: 592px;
+    justify-content: center;
+    align-items: center;
+    margin-top:3vh;
+}
+
+.input-group{
+    margin-top: 1vh;
+}
+
+.input-group label{
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 24px;
+}
+
+.input-group label #label-for-file{
+    margin-top: 2vh;
+}
+
+.input-group input{
+    width: 100%;
+    margin-top: 0.5vh;
+    margin-left: 24px;
+    height: 2vh;
+    box-sizing: border-box;
+    border-color:transparent;
+}
+
+.input-group textarea{
+    width: 544px;
+    margin-top: 1vh;
+    margin-left: 24px;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+.input-group hr{
+    margin-top: 1vh;
+    width: 592px;
+    background-color: lightgrey;
+}
+
+#modify-post-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ACA0EB;
+    color: white;
+    text-align: center;
+    border-color: transparent;
+    width: 355px;
+    height: 33px;
+    margin-left: 118.5px;
+    margin-top: 2vh;
+    font-size: 0.8vw;
+    border-radius: 4px;
+}
+
+.select-file{
+    margin-top: 2vh;
+}

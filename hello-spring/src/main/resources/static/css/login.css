@@ -1,0 +1,104 @@
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f5f7;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    overflow-y: auto;
+  }
+  
+  /* Header Styles */
+  header h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 5vh;
+    margin: 1vh 0;
+  }
+  
+  /* Login Section */
+  .login-body {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 264px;
+  }
+  
+  .login-body h2{
+    margin-bottom: 20px;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* Form Styles */
+  #login-form {
+    width: 392px;
+  }
+  
+  /* Input Group */
+  .input-group {
+    width: 100%;
+    margin-bottom: 1vh;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 0.5vh;
+    margin-left: 18.5px;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: left;
+  }
+  
+  .input-group input {
+    width: 355px;
+    padding: 0.5em;
+    border: 0.1vw solid #ccc;
+    border-radius: 0.5vw;
+  }
+  
+  .input-group p {
+    font-size: 0.7rem;
+    margin-top: 0.7rem;
+    color: red;
+  }
+  
+  /* Button Styles */
+  #login-button {
+    background-color: #ACA0EB;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    width: 355px;
+    padding: 0.5vh;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  
+  #login-button:hover {
+    opacity: 0.9;
+  }
+  
+  #sign-up-button {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 20px;
+  }
