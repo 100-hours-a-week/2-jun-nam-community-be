@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const elements = getDomElements();
     const userInfo = await fetchUserInfo();
+    console.log(userInfo);
     setupProfileEdit(userInfo, elements.editProfile);
     setupPasswordEdit(userInfo, elements.changePassword);
     setupLogout(elements.logout);
@@ -24,7 +25,9 @@ function getDomElements() {
 }
 
 async function fetchUserInfo() {
-    return await (await fetch("http://localhost:8080/auth/me")).json();
+    const user = await (await fetch("http://localhost:8080/auth/me")).json();
+    console.log(user);
+    return user;
 }
 
 function setupProfileEdit(userInfo, editProfile){
@@ -95,6 +98,7 @@ async function createPost(userInfo, title, content) {
     const response = await fetch('http://localhost:8080/posts', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
             title,
             content,
@@ -104,7 +108,9 @@ async function createPost(userInfo, title, content) {
             likeCount: 0,
             commentCount: 0,
             viewCount: 0,
-            comments: []
+            comments: [],
+            interactions: [],
+            authorId: userInfo.id,
         })
     });
     if (!response.ok) throw new Error('네트워크에 문제가 발생했습니다');

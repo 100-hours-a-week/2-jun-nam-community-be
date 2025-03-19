@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping(value = "/users")
 public class UserController {
@@ -42,6 +44,24 @@ public class UserController {
             } else {
                 return ResponseEntity.badRequest().body("회원가입에 실패했습니다.");
             }
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpSession httpSession){
+        try {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new IllegalStateException("해당 사용자가 존재하지 않습니다."));
+
+            userService.deleteUser(id);
+
+            return ResponseEntity.ok("게시글이 성공적으로 삭제되었습니다.");
+        }
+        catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해 게시글 삭제에 실패했습니다.");
         }
     }
 

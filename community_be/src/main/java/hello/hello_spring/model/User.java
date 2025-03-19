@@ -25,6 +25,10 @@ public class User {
     @JsonManagedReference(value = "user-posts")
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "user-interactions")
+    private List<PostInteraction> interactions = new ArrayList<>();
+
     public User(){
 
     }
@@ -88,5 +92,13 @@ public class User {
     public void deletePost(Post post) {
         this.posts.remove(post);
         post.setUser(null);
+    }
+
+    public List<PostInteraction> getInteractions() {
+        return interactions;
+    }
+
+    public void deletePostInteractions(Post post){
+        interactions.removeIf(interaction -> interaction.getPost().equals(post));
     }
 }

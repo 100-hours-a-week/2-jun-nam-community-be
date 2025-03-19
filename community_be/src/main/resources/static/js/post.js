@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     staticElements.postBody.innerHTML = `<p>잘못된 접근입니다</p>`;
       return;
   }
-  renderPost(post, staticElements.postBody);
+  renderPost(userInfo, post, staticElements.postBody);
   renderComments(post.comments, staticElements.commentSection, userInfo);
   let dynamicElements;
   setTimeout(() => {
@@ -460,19 +460,27 @@ function setupDropdownMenu({ profileIcon, dropdown }){
 
 function setupModals({postId, deletePostBtn, modifyPostBtn}){
   console.log(deletePostBtn);
-  deletePostBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        postModalOverlay.style.display = "flex";
-        document.body.style.overflow = "hidden";
-  });
+  if(deletePostBtn){
+    deletePostBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      postModalOverlay.style.display = "flex";
+      document.body.style.overflow = "hidden";
+});
+  }
 
-  modifyPostBtn.addEventListener("click", () => {
+  if(modifyPostBtn){
+    modifyPostBtn.addEventListener("click", () => {
       location.href = `/posts/${postId}/edit`;
     });
+  }
 }
 
-function renderPost(post, postBody){
-    postBody.innerHTML =
+function renderPost(userInfo, post, postBody){
+    console.log(userInfo.id);
+    console.log(post.authorId);
+
+    if(userInfo.id == post.authorId){
+      postBody.innerHTML =
       `<div class="author-post-card">
             <h2 class="post-title">${post.title}</h2>
             <div class="post-meta">
@@ -518,10 +526,57 @@ function renderPost(post, postBody){
         <div id="comment-section">
         </div>
         ` + postBody.innerHTML;
+    }
+    else{
+      postBody.innerHTML =
+      `<div class="author-post-card">
+            <h2 class="post-title">${post.title}</h2>
+            <div class="post-meta">
+                <div class="author-profile"></div>
+                <div class="author-name">${post.author}</div>
+                <span class="post-date">${post.createdAt}</span>
+            </div>
+        </div>
+        <hr class="divider">
+        <div class="post-text">
+            <img class="post-image" src="https://plus.unsplash.com/premium_photo-1701192799526-1a042fa6bdba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+            <div class="post-text-meta">
+                ${post.content}
+            </div>
+        </div>
+        <div class="post-buttons">
+            <div class="post-num-likes" id="like-button">
+                <div id="num-likes">${post.likeCount}</div>
+                <p>좋아요수</p>
+            </div>
+            <div class="post-num-views">
+                <p>${post.viewCount}</p>
+                <p>조회수</p>
+            </div>
+            <div class="post-num-comments">
+                <p>${post.commentCount}</p>
+                <p>댓글</p>
+            </div>
+        </div>
+        <hr class="divider">
+        <div class="post-write-comment">
+            <form action="">
+               <div class="post-write-comment-body">
+                    <textarea name="" id="post-write-comment-text" placeholder="댓글을 입력해주세요!"></textarea>
+                    <button class="registerCommentButton" id="register-comment-button" disabled>댓글 등록</button>
+               </div>
+            </form>
+        </div>
+        <div id="comment-section">
+        </div>
+        ` + postBody.innerHTML;
+    }
+    
 }
 
 function renderComments(postComments, commentSection, userInfo){
   postComments = postComments || [];
+  console.log(postComments);
   if (postComments.length != 0) {
     postComments.forEach((comment) => {
       console.log("id: " + comment.id);
@@ -529,7 +584,7 @@ function renderComments(postComments, commentSection, userInfo){
       const commentElement = document.createElement("div");
       commentElement.classList.add("comment-post-card");
 
-      if (comment.author == userInfo.nickname) {
+      if (comment.onUserId == userInfo.id) {
         commentElement.innerHTML = `
         <div class="post-meta">
             <div class="author-profile"></div>

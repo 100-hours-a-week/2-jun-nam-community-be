@@ -18,8 +18,8 @@ function getDomElements() {
 
 async function setupEventListeners({ logout, editProfile, profileIcon, dropdown }) {
     try {
-        const userInfo = await (await fetch("/auth/me")).json();
-        console.log("사용자 정보: " + JSON.stringify(userInfo));
+        const userInfo = await (await fetch("http://localhost:8080/auth/me")).json();
+        console.log(userInfo);
         setupProfileEdit(userInfo, editProfile);
         setupPasswordEdit(userInfo, changePassword);
         setupLogout(logout);

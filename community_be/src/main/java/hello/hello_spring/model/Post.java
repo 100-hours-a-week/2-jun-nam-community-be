@@ -24,15 +24,20 @@ public class Post {
     private Integer likeCount;
     private Integer commentCount;
     private Integer viewCount;
+    private Long authorId;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference(value = "post-comments")
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference(value = "user-posts")
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference(value = "post-interactions")
+    private List<PostInteraction> interactions = new ArrayList<>();
 
     public Long getId() {
         return postId;
@@ -83,7 +88,7 @@ public class Post {
     }
 
     public void setLikeCount(Integer likeCount) {
-        this.likeCount = likeCount;
+        this.likeCount = (int) interactions.stream().filter(PostInteraction::getLiked).count();
     }
 
     public Integer getCommentCount() {
@@ -98,8 +103,8 @@ public class Post {
         return viewCount;
     }
 
-    public void setViewCount(Integer viewCount) {
-        this.viewCount = viewCount;
+    public void setViewCount() {
+        this.viewCount = (int) interactions.stream().filter(PostInteraction::getViewed).count();
     }
 
     public List<Comment> getComments() {
@@ -120,6 +125,14 @@ public class Post {
         comment.setPost(null);
     }
 
+    public List<PostInteraction> getInteractions() {
+        return interactions;
+    }
+
+    public void setInteractions(List<PostInteraction> interactions) {
+        this.interactions = interactions;
+    }
+
     public void updateCommentCount(){
         this.commentCount = this.comments.size();
     }
@@ -134,5 +147,14 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setAuthorId(Long id){
+        System.out.println("[debug - author Id] : " + id);
+        this.authorId = id;
+    }
+
+    public Long getAuthorId(){
+        return this.authorId;
     }
 }

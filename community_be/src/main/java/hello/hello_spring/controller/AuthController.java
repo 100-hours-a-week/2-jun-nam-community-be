@@ -47,11 +47,11 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getUserSession(HttpSession session){
         User user = (User)session.getAttribute("user");
-
+        System.out.println("[dubeg]: user Id : " + user.getId());
         if(user == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 정보 없음");
         }
-
+        System.out.println("[dubeg2]: user Id : " + user.getId());
         return ResponseEntity.ok(user);
     }
 

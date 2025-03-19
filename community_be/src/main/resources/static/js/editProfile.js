@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupDropdownMenu(elements);
     setupProfileEdit(userInfo, elements.editProfile);
     setupPasswordEdit(userInfo, elements.changePassword);
+    setupDeleteAccount(userInfo.id, elements.deleteAccount);
+    setupModifyComplete(elements.modifyComplete);
     setupLogout(elements.logout);
 });
 
@@ -69,7 +71,7 @@ function setupModifyNicknameHandler(userInfo, { modifyButton, nickname, nickname
         }
         try {
             await modifyUserNickname(userInfo.id, nickname.value, userInfo.password);
-            location.href = '/index';
+            location.href = `/users/${userInfo.id}/edit`;
         } catch (error) {
             console.error('유저 닉네임 수정 실패:', error);
         }
@@ -149,3 +151,27 @@ function setupProfileEdit(userInfo, editProfile){
   });
   }
   
+
+  function setupDeleteAccount(userId, deleteAccountBtn){
+    deleteAccountBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try{
+            const response = await fetch(`/users/${userId}`, {method: "DELETE"});
+
+            if(response.ok){
+                alert("회원탈퇴가 정상적으로 진행되었습니다.");
+                location.href = "/";
+            }else {
+                alert("회원탈퇴 처리에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("❌ 회원탈퇴 중 오류 발생:", error);
+        }
+    })
+  }
+
+  function setupModifyComplete(modifyComplete){
+    modifyComplete.addEventListener('click', () => {
+        location.href = "/index";
+    })
+  }

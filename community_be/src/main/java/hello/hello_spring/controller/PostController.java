@@ -28,8 +28,14 @@ public class PostController {
 
     @PostMapping("/posts")
     @ResponseBody
-    public ResponseEntity<?> createPost(@RequestBody Post post){
+    public ResponseEntity<?> createPost(@RequestBody Post post, HttpSession httpSession){
         try{
+            System.out.println(post);
+            User user = (User)httpSession.getAttribute("user");
+            System.out.println("[debug in /posts controller] : " + user.getNickname());
+
+            post.setUser(user);
+            post.setAuthorId(user.getId());
             postService.savePost(post);
 
             HttpHeaders headers = new HttpHeaders();
@@ -50,9 +56,11 @@ public class PostController {
     }
 
     @GetMapping("/api/posts/{id}")
-    public ResponseEntity<?> getPostById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getPostById(@PathVariable("id") Long id, HttpSession httpSession) {
         try {
             Post post = postService.findPostById(id);
+            User user = (User)httpSession.getAttribute("user");
+            postService.viewPost(post.getId(), user.getId());
             return ResponseEntity.ok(post);  // ✅ JSON 응답 반환
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("게시글을 찾을 수 없습니다.");
@@ -85,11 +93,12 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public String getPostDetail(@PathVariable("id") Long id) {
+    public String getPostDetail(@PathVariable("id") Long id, HttpSession httpSession) {
         try {
             Post post = postService.findPostById(id);
-            post.updateViewCount();
+            User user = (User)httpSession.getAttribute("user");
             post.updateCommentCount();
+            postService.viewPost(id, user.getId());
             postRepository.save(post);
             return "/html/post.html";
         } catch (IllegalArgumentException e) {
@@ -114,7 +123,9 @@ public class PostController {
         try {
             System.out.println("[Debug]: httpSession: " + httpSession);
             User user = (User)httpSession.getAttribute("user");
-            postService.deletePost(id, user.getId());
+            Post post = postRepository.findById(id)
+                    .orElseThrow(() -> new IllegalStateException("해당 게시글이 존재하지 않습니다."));
+            postService.deletePost(id, post.getUser().getId());
 
             return ResponseEntity.ok("게시글이 성공적으로 삭제되었습니다.");
         }

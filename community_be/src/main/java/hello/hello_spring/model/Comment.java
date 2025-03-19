@@ -17,12 +17,12 @@ public class Comment {
     private Long onPostId;
     private Long onUserId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", nullable = false) // ✅ FK 설정
     @JsonBackReference(value = "post-comments")
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false) // ✅ FK 설정
     @JsonBackReference(value = "user-comments")
     private User user;
