@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordReenter = document.getElementById("password-reenter");
   const nickname = document.getElementById("nickname");
   const signupbutton = document.getElementById("signupbutton");
+  const profilePlaceholder = document.getElementById("profilePlaceholder");
+  const profilePic = document.getElementById('profilePic');
 
   function isNicknameValid(nickname) {
     const trimmedNickname = nickname.trim();
@@ -40,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("invalid");
     }
   }
-
+  
   email.addEventListener("input", validateInputs);
   password.addEventListener("input", validateInputs);
   passwordReenter.addEventListener("input", validateInputs);
@@ -113,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
         */
         //System.out.println("before try----------------");
         try{
+            const profileImage = document.getElementById('selectedProfileImage');
             const response = await fetch("http://localhost:8080/users", {
               method: "POST",
               headers: {
@@ -122,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   email: email.value,
                   password: password.value,
                   nickname: nickname.value,
+                  profileImage: profileImage.src,
               })
           });
 
@@ -136,44 +140,49 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("회원가입이 완료되었습니다!");
                 location.href="/";
             }
-//            //response를 JSON 형태의 파일로 변환
-//            const users = await response.json();
-//
-//            const user = users.some(user => user.email === email.value);
-//
-//            if(user){
-//                emailErrorMessage.innerText="*이미 사용 중인 이메일입니다";
-//            }
-//            else{
-//                emailErrorMessage.innerHTML = "&nbsp;";
-//
-//                const newUser = {
-//                    email: email.value,
-//                    password: password.value,
-//                    nickname: nickname.value,
-//                  };
-//
-//                //서버에 POST요청을 보내 신규 유저 등록 요청
-//                const createUserResponse = await fetch('/users', {
-//                    method: 'POST',
-//                    headers: {
-//                        'Content-Type': 'application/json'
-//                    },
-//                    body: JSON.stringify(newUser)
-//                });
-//
-//                if (!createUserResponse.ok) {
-//                    throw new Error("회원가입 처리 중 오류 발생");
-//                }
-//
-//                window.location.href = 'login.html';
-//            }
         }
         catch(error){
             alert("회원가입 중 문제가 발생했습니다");
             return;
         }
+      }
     }
+  );
+
+  profilePlaceholder.addEventListener('click', () => {
+    document.getElementById("profilePic").click(); // 숨겨진 파일 입력 버튼 클릭
+  });
+
+  profilePic.addEventListener('change', async () => {
+    const file = profilePic.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/api/images", {
+        method: "POST",
+        body: formData
+    });
+    const imageURL = await response.text();
+    if(response.ok){
+      console.log("hi");
+    }
+    console.log(imageURL);
+    var testURL = 'https://plus.unsplash.com/premium_photo-1734543942868-2470c4cba7b5?q=80&w=3200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    console.log("Background Image URL:", `url(${imageURL})`);
+    console.log("Computed Style:", getComputedStyle(profilePlaceholder).backgroundImage);
+            if (file) {
+              // `+` 대신 `img` 태그로 변경
+              profilePlaceholder.innerHTML = ""; // 기존 `+` 제거
+              const imgElement = document.createElement("img");
+              imgElement.src = `${imageURL}`;
+              imgElement.alt = "프로필 사진";
+              imgElement.style.width = "100%";
+              imgElement.style.height = "100%";
+              imgElement.style.borderRadius = "50%";
+              imgElement.style.objectFit = "cover";
+              imgElement.id = 'selectedProfileImage';
+              profilePlaceholder.appendChild(imgElement);
+            }
   });
 });
 

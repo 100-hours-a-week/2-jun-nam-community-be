@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +58,10 @@ public class PostService {
         this.savePost(post);
     }
 
+    public List<Post> findActivePost(){
+        return postRepository.findAllActivePosts();
+    }
+
     @Transactional
     public void savePost(Post post){
         if(post.getTitle() == null || post.getTitle().isEmpty()){
@@ -69,33 +74,43 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long id, Long userId){
+    public void deletePost(Long id, User user){
         try{
             Post post = postRepository.findById(id)
                     .orElseThrow(() -> new IllegalStateException("해당 게시글이 존재하지 않습니다."));
-            User user = post.getUser();
+            if (!post.getUser().getId().equals(user.getId())) {
+                throw new RuntimeException("해당 게시글을 삭제할 권한이 없습니다.");
+            }
 
-            // 1️⃣ 연관된 Comments 삭제
-            System.out.println("[debug post get comments]: "+ post.getComments());
-            System.out.println("[debug post get interactions]: "+ post.getInteractions());
-            post.getComments().clear();
-//
-//            // 2️⃣ 연관된 PostInteractions 삭제
-            postInteractionRepository.deleteByPostId(id);
-//
-            System.out.println(post.getId());
-//            user.getComments().removeIf(comment -> comment.getPost().getId().equals(post.getId()));
-            user.getInteractions().clear();
-            user.getInteractions().removeIf(interaction -> interaction.getPost().equals(post));
-            postRepository.delete(post);
-            user.deletePost(post);
-            System.out.println("[debug]: 123456789");
-//
-//
+//            // 1️⃣ 연관된 Comments 삭제
+//            System.out.println("[debug post get comments]: "+ post.getComments());
+//            System.out.println("[debug post get interactions]: "+ post.getInteractions());
+//            post.getComments().clear();
+////
+////            // 2️⃣ 연관된 PostInteractions 삭제
+//            postInteractionRepository.deleteByPostId(id);
+////
+//            System.out.println(post.getId());
+////            user.getComments().removeIf(comment -> comment.getPost().getId().equals(post.getId()));
+//            user.getInteractions().clear();
+//            user.getInteractions().removeIf(interaction -> interaction.getPost().equals(post));
 //            postRepository.delete(post);
-            System.out.println("게시글 삭제 완료");
-//
-//            postRepository.flush();
+//            user.deletePost(post);
+//            System.out.println("[debug]: 123456789");
+////
+////
+////            postRepository.delete(post);
+//            System.out.println("게시글 삭제 완료");
+////
+////            postRepository.flush();
+            // ✅ Soft Delete 적용
+            post.softDelete();
+
+            // ✅ 변경 사항 저장 (UPDATE 실행됨)
+            postRepository.save(post);
+
+            cleanupDeletedPosts(user);
+            System.out.println("게시글 소프트 삭제 완료");
         }
         catch (DataIntegrityViolationException e) {
             throw new IllegalStateException("데이터 무결성 위반: 게시글 삭제 실패", e);
@@ -106,6 +121,49 @@ public class PostService {
             e.printStackTrace();
             System.out.println("aasdfa-------------");
             throw new RuntimeException("예상치 못한 오류로 게시글 삭제에 실패했습니다.", e);
+        }
+    }
+
+    @Transactional
+    public void cleanupDeletedPosts(User user) {
+        LocalDateTime cutoffDate = LocalDateTime.now();
+
+        // ✅ 30일이 지난 Soft Delete된 데이터 조회
+        List<Post> postsToDelete = postRepository.findAllByDeletedAtBefore(cutoffDate);
+        System.out.println("[debug in cleanupDeletedPosts] postsToDelete : " + postsToDelete);
+        if (!postsToDelete.isEmpty()) {
+
+
+            // ✅ 3️⃣ 게시글 삭제
+            postRepository.deleteAll(postsToDelete);
+            System.out.println(postsToDelete.size() + "개의 삭제된 게시글을 영구적으로 삭제했습니다.");
+        }
+    }
+
+    @Transactional
+    public void setLike(Long id){
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("해당 게시글이 존재하지 않습니다."));
+
+        User user = post.getUser();
+
+        PostInteraction postInteraction = postInteractionRepository.findByPostAndUser(post, user)
+                        .orElseThrow(() -> new IllegalStateException("postInteraction이 존재하지 않습니다."));
+        System.out.println("[debug]: asdfasdfasdf");
+        System.out.println("[debug]: " + postInteraction.getPost());
+        System.out.println("[debug] postInteraction.getLine(): " + postInteraction.getLiked());
+        if (postInteraction.getPost() == post) {
+           if(!postInteraction.getLiked()){
+               postInteraction.setLiked(true);
+               post.setLikeCount(post.getLikeCount() + 1);
+           }
+           else{
+               postInteraction.setLiked(false);
+               post.setLikeCount(post.getLikeCount() - 1);
+           }
+            System.out.println("[debug] post.getLikeCount(): " + post.getLikeCount());
+           postInteractionRepository.save(postInteraction);
+           this.savePost(post);
         }
     }
 }

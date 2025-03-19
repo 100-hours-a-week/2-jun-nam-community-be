@@ -15,7 +15,7 @@ public class WebController {
         return "/html/index.html";
     }
 
-    @GetMapping("/createPost")
+    @GetMapping("/posts/write")
     public String createPostPage() {
         System.out.println("hi");
         return "/html/createPost.html";

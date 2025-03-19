@@ -22,6 +22,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자 정보를 찾을 수 없습니다"));
     }
 
+    @Transactional(readOnly = true)
     public User findUser(String email, String password){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 이메일입니다"));

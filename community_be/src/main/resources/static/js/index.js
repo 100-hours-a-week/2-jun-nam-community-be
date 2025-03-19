@@ -16,10 +16,12 @@ function getDomElements() {
     };
 }
 
-async function setupEventListeners({ logout, editProfile, profileIcon, dropdown }) {
+async function setupEventListeners({ createPostButton, logout, editProfile, profileIcon, dropdown }) {
     try {
         const userInfo = await (await fetch("http://localhost:8080/auth/me")).json();
+        profileIcon.src = userInfo.profileImage;
         console.log(userInfo);
+        setupCreatePostBtn(createPostButton);
         setupProfileEdit(userInfo, editProfile);
         setupPasswordEdit(userInfo, changePassword);
         setupLogout(logout);
@@ -118,4 +120,10 @@ function setupPostEventListeners() {
             location.href = `/posts/${postId}`;
         });
     });
+}
+
+function setupCreatePostBtn(createPostButton) {
+    createPostButton.addEventListener('click', () => {
+        location.href = "/posts/write";
+    })
 }

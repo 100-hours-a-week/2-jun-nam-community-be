@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     //과제4: url을 통해 특정 post의 id를 전달하도록 index.html에서 설정했음. 이를 활용해 서버에서 특정 게시글의 정보를 받아옴
     //URLSearchParams를 통해 url을 통해 전달될 특정 값을 key-value 단위로 만들어서 관리할 수 있음
+    const userInfo = await (await fetch("http://localhost:8080/auth/me")).json();
+    profileIcon.src = userInfo.profileImage;
+    
     let post;
     try {
         const postResponse = await fetch(`http://localhost:8080/api/posts/${postId}`);

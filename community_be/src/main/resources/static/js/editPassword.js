@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const elements = getDomElements();
-    const userInfo = await fetchUserInfo();
+    const userInfo = await fetchUserInfo(elements.profileIcon);
     setupValidationHandlers(elements);
     setupModifyPasswordHandler(userInfo, elements);
     setupDropdownMenu(elements);
@@ -24,8 +24,10 @@ function getDomElements() {
     };
 }
 
-async function fetchUserInfo() {
-    return await (await fetch("/auth/me")).json();
+async function fetchUserInfo(profileIcon) {
+    const userInfo =  await (await fetch("/auth/me")).json();
+    profileIcon.src = userInfo.profileImage;
+    return userInfo;
 }
 
 function setupValidationHandlers({ password, passwordReenter, modifyButton }) {

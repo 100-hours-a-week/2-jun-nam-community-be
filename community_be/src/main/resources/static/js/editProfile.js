@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const elements = getDomElements();
-    const userInfo = await fetchUserInfo();
+    const userInfo = await fetchUserInfo(elements);
     initializeUserProfile(userInfo, elements);
     setupProfilePictureChange(elements);
     setupModifyNicknameHandler(userInfo, elements);
@@ -35,8 +35,11 @@ function getDomElements() {
     };
 }
 
-async function fetchUserInfo() {
-    return await (await fetch("/auth/me")).json();
+async function fetchUserInfo({profileIcon, profileImage}) {
+    const userInfo =  await (await fetch("/auth/me")).json();
+    profileIcon.src = userInfo.profileImage;
+    profileImage.src = userInfo.profileImage;
+    return userInfo;
 }
 
 function initializeUserProfile(userInfo, { email, nickname }) {
@@ -60,7 +63,7 @@ function setupProfilePictureChange({ changeProfilePicBtn, profilePicInput, profi
     });
 }
 
-function setupModifyNicknameHandler(userInfo, { modifyButton, nickname, nicknameError }) {
+function setupModifyNicknameHandler(userInfo, { modifyButton, nickname, nicknameError, profilePicInput }) {
     modifyButton.addEventListener('click', async (e) => {
         e.preventDefault();
         if (nickname.value.length >= 11) {
@@ -70,7 +73,7 @@ function setupModifyNicknameHandler(userInfo, { modifyButton, nickname, nickname
             nicknameError.innerHTML = '&nbsp;';
         }
         try {
-            await modifyUserNickname(userInfo.id, nickname.value, userInfo.password);
+            await modifyUserInfo(userInfo.id, nickname.value, userInfo.password, profilePicInput);
             location.href = `/users/${userInfo.id}/edit`;
         } catch (error) {
             console.error('유저 닉네임 수정 실패:', error);
@@ -78,11 +81,20 @@ function setupModifyNicknameHandler(userInfo, { modifyButton, nickname, nickname
     });
 }
 
-async function modifyUserNickname(userId, newNickname, password) {
+async function modifyUserInfo(userId, newNickname, password, profilePicInput) {
+    const file = profilePicInput.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const imageUrl = await (await fetch("/api/images", {
+        method: "POST",
+        body: formData
+    })).text();
+
     const response = await fetch(`http://localhost:8080/users/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nickname: newNickname, password })
+        body: JSON.stringify({ nickname: newNickname, password, profileImage: imageUrl })
     });
     if (!response.ok) throw new Error('유저 닉네임 수정 실패');
 }

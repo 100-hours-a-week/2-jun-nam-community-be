@@ -7,9 +7,22 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface PostRepository extends JpaRepository<Post, Long> {
+    @Modifying
     @Transactional
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("DELETE FROM PostInteraction p WHERE p.post = :post")
-    void deleteByPost(@Param("post") Post post);
+    @Query("DELETE FROM Post p WHERE p IN :posts")
+    void deleteAllByPostIn(@Param("posts") List<Post> posts);
+
+    @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL")
+    List<Post> findAllActivePosts();
+
+
+    @Modifying
+    @Transactional
+    @Query("SELECT p FROM Post p WHERE p.deletedAt IS NOT NULL AND p.deletedAt < :cutoffDate")
+    List<Post> findAllByDeletedAtBefore(@Param("cutoffDate") LocalDateTime cutoffDate);
 }
+

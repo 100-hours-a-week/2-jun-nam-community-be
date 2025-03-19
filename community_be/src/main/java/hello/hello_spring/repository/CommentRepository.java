@@ -12,6 +12,12 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
-    @Query("DELETE FROM Comment c WHERE c.post.id = :postId")
-    void deleteByPostId(@Param("postId") Long postId);
+    @Transactional
+    @Query("DELETE FROM Comment c WHERE c.post IN :posts")
+    void deleteAllByPostIn(@Param("posts") List<Post> posts);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM PostInteraction pi WHERE pi.post = :post")
+    void deleteAllByPost(@Param("post") Post post);
 }

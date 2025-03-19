@@ -76,6 +76,17 @@ public class PostController {
         }
     }
 
+    @GetMapping("/posts")
+    @ResponseBody
+    public List<Post> getPosts(){
+        List<Post> posts = postService.findActivePost();
+
+        if(posts.isEmpty()){
+            System.out.println("no posts yet");
+        }
+        return posts;
+    }
+
     @PatchMapping("/posts/{id}")
     @ResponseBody
     public ResponseEntity<?> patchPost(@PathVariable("id") Long id, @RequestBody Post post){
@@ -106,26 +117,13 @@ public class PostController {
         }
     }
 
-    @GetMapping("/posts")
-    @ResponseBody
-    public List<Post> getPosts(){
-        List<Post> posts = postService.findAllPost();
-
-        if(posts.isEmpty()){
-            System.out.println("no posts yet");
-        }
-        return posts;
-    }
 
     @DeleteMapping("/posts/{id}")
     @ResponseBody
     public ResponseEntity<?> deletePost(@PathVariable Long id, HttpSession httpSession){
         try {
-            System.out.println("[Debug]: httpSession: " + httpSession);
             User user = (User)httpSession.getAttribute("user");
-            Post post = postRepository.findById(id)
-                    .orElseThrow(() -> new IllegalStateException("해당 게시글이 존재하지 않습니다."));
-            postService.deletePost(id, post.getUser().getId());
+            postService.deletePost(id, user);
 
             return ResponseEntity.ok("게시글이 성공적으로 삭제되었습니다.");
         }
@@ -133,6 +131,23 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해 게시글 삭제에 실패했습니다.");
+        }
+    }
+
+    @PostMapping("/posts/{id}/like")
+    @ResponseBody
+    public ResponseEntity<?> likePost(@PathVariable Long id, HttpSession httpSession){
+        try{
+            postService.setLike(id);
+            Post post = postRepository.findById(id)
+                    .orElseThrow(() -> new IllegalStateException("해당 게시글이 존재하지 않습니다."));
+            return ResponseEntity.ok(post.getLikeCount());
+        }
+        catch(IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("페이지를 찾을 수 없습니다");
+        }
+        catch(IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

@@ -26,7 +26,10 @@ public class Post {
     private Integer viewCount;
     private Long authorId;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt; // NULL이면 삭제되지 않은 상태
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "post-comments")
     private List<Comment> comments = new ArrayList<>();
 
@@ -35,9 +38,13 @@ public class Post {
     @JsonBackReference(value = "user-posts")
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "post-interactions")
     private List<PostInteraction> interactions = new ArrayList<>();
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now(); // 현재 시간으로 설정하여 논리적 삭제
+    }
 
     public Long getId() {
         return postId;
@@ -88,7 +95,7 @@ public class Post {
     }
 
     public void setLikeCount(Integer likeCount) {
-        this.likeCount = (int) interactions.stream().filter(PostInteraction::getLiked).count();
+        this.likeCount = likeCount;
     }
 
     public Integer getCommentCount() {

@@ -25,6 +25,7 @@ public class AuthController {
     public ResponseEntity<?> getUserData(@RequestBody Auth auth, HttpSession session){
         try{
             User user = userService.findUser(auth.getEmail(), auth.getPassword());
+            System.out.println("[debug in authcontroller ] : " + user.getId());
             if (user != null) {
                 session.setAttribute("user", user);
                 HttpHeaders headers = new HttpHeaders();

@@ -315,26 +315,14 @@
 //   });
 // });
 
-async function fetchPostData(postId){
-  const postResponse = await fetch(
-    `http://localhost:8080/api/posts/${postId}`
-  );
-  const post = await postResponse.json();
-
-  if(!postResponse.ok)
-    return null;
-
-  return post;
-}
-
-function rgbToHex(rgb) {
-  const rgbValues = rgb.match(/\d+/g).map(Number);
-  return `#${rgbValues.map((x) => x.toString(16).padStart(2, "0")).join("")}`;
-}
+const likeBtnEnabled = "#d9d9d9";
+const likeBtnDisabled = "#ACA0EB";
+const btnEnabled = "";
+const btnDisabled = "";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const userInfo = await fetchUserInfo();
   const staticElements = getDomStaticElements();
+  const userInfo = await fetchUserInfo(staticElements.profileIcon);
   setupStaticEventListeners(userInfo, staticElements);
 
   const post = await fetchPostData(staticElements.postId);
@@ -351,6 +339,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupDynamicEventListeners(userInfo, dynamicElements);
   }, 100); 
 });
+
+async function fetchPostData(postId){
+  const postResponse = await fetch(
+    `http://localhost:8080/api/posts/${postId}`
+  );
+  const post = await postResponse.json();
+
+  if(!postResponse.ok)
+    return null;
+
+  return post;
+}
+
+function rgbToHex(rgb) {
+  const rgbValues = rgb.match(/\d+/g).map(Number);
+  return `#${rgbValues.map((x) => x.toString(16).padStart(2, "0")).join("")}`;
+}
 
 function getDomStaticElements() {
   return {
@@ -394,23 +399,23 @@ function setupStaticEventListeners(userInfo, elements){
   setupDropdownMenu(elements);
   setupPostModalHandler(elements);
   setupCommentModalHandler(elements);
-  // setupModifyPostHandler(elements.modifyPostBtn);
-  // setupDeletePostHandler(elements);
 }
 
 function setupDynamicEventListeners(userInfo, elements) {
   setupModals(elements);
-  setupLikeButton(elements.likeButton);
+  setupLikeButton(elements.postId, elements.likeButton);
   setupRegisterCommentHandler(elements, userInfo);
   setupCommentTextHandler(elements);
   setupModifyCommentHandler(elements);
-  setupDeleteCommentHandler(elements); // ✅ 삭제 핸들러 추가
+  setupDeleteCommentHandler(elements);
   setupModifyPostHandler(elements);
   setupDeletePostHandler(elements);
 }
 
-async function fetchUserInfo(){
-  return await (await fetch("/auth/me")).json();
+async function fetchUserInfo(profileImage){
+  const userData = await (await fetch("/auth/me")).json();
+  profileImage.src = userData.profileImage;
+  return userData;
 }
 
 
@@ -476,8 +481,6 @@ function setupModals({postId, deletePostBtn, modifyPostBtn}){
 }
 
 function renderPost(userInfo, post, postBody){
-    console.log(userInfo.id);
-    console.log(post.authorId);
 
     if(userInfo.id == post.authorId){
       postBody.innerHTML =
@@ -621,23 +624,36 @@ function renderComments(postComments, commentSection, userInfo){
   }
 }
 
-function setupLikeButton(likeButton){
+function setupLikeButton(postId, likeButton){
   const numLikes = document.getElementById("num-likes");
   const element = document.getElementsByClassName("post-num-likes")[0];
 
-  likeButton.addEventListener('click', () => {
+  likeButton.addEventListener('click', async () => {
+      try{
+        const response = await fetch(`/posts/${postId}/like`, {
+          method: "POST",
+        });
+        const likeCount = await response.json();
+        if(!response.ok){
+          console.log("action not avaiable");
+          return;
+        }
         const style = getComputedStyle(element);
         const bgColor = style["background-color"];
-    
-        if (rgbToHex(bgColor) == "#d9d9d9") {
-          element.style.backgroundColor = "#ACA0EB";
+        
+        numLikes.innerText = likeCount;
+        if (rgbToHex(bgColor) == '#d9d9d9') {
+          element.style.backgroundColor = '#ACA0EB';
           console.log(numLikes.innerText);
-          numLikes.innerText = Number(numLikes.innerText) + 1;
-        } else if (rgbToHex(bgColor) == "#aca0eb") {
-          element.style.backgroundColor = "#d9d9d9";
-          numLikes.innerText = Number(numLikes.innerText) - 1;
+        } 
+        else if (rgbToHex(bgColor) == '#ACA0EB') {
+          element.style.backgroundColor = '#d9d9d9';
         }
-      });
+      }
+      catch(e){
+        throw new Error(e);
+      }
+    });
 }
 
 function setupRegisterCommentHandler({registerCommentBtn, commentText, postId}, userInfo){
@@ -714,17 +730,21 @@ function setupModifyCommentHandler({modifyCommentBtn, commentText, postCardText,
 }
 
 function setupModifyPostHandler({modifyPostBtn, postId}){
-  modifyPostBtn.addEventListener("click", () => {
-    location.href = `/posts/${postId}/edit`;
-  });
+  if(modifyPostBtn){
+    modifyPostBtn.addEventListener("click", () => {
+      location.href = `/posts/${postId}/edit`;
+    });
+  }
 }
 
 function setupDeletePostHandler({deletePostBtn, postModalOverlay}){
-  deletePostBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    postModalOverlay.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  });
+  if(deletePostBtn){
+    deletePostBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      postModalOverlay.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    });
+  }
 }
 
 function setupDeleteCommentHandler({deleteCommentBtn, commentModalOverlay}){

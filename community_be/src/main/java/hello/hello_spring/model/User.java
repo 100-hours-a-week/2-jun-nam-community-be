@@ -16,26 +16,31 @@ public class User {
     private String email;
     private String password;
     private String nickname;
+    private String profileImage;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "user-comments")
+    @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "user-posts")
+    @JsonIgnore
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "user-interactions")
+    @JsonIgnore
     private List<PostInteraction> interactions = new ArrayList<>();
 
     public User(){
 
     }
-    public User(String email, String password, String nickname){
+    public User(String email, String password, String nickname, String profileImage){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.profileImage = profileImage;
     }
 
     public Long getId() {
@@ -100,5 +105,13 @@ public class User {
 
     public void deletePostInteractions(Post post){
         interactions.removeIf(interaction -> interaction.getPost().equals(post));
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }
