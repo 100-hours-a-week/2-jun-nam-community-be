@@ -14,6 +14,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL")
     List<Post> findAllActivePosts();
 
+    List<Post> findByUserId(Long userId);
 
     @Modifying
     @Transactional

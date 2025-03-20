@@ -115,6 +115,25 @@ document.addEventListener("DOMContentLoaded", () => {
         */
         //System.out.println("before try----------------");
         try{
+          let imageURL = '';
+          if(profilePic.files[0]){
+            const formData = new FormData();
+            formData.append("file", profilePic.files[0]);
+        
+            const userImageresponse = await fetch("/api/images/users", {
+                method: "POST",
+                body: formData
+            });
+            imageURL = await userImageresponse.text();
+            if(!userImageresponse.ok){
+              alert("이미지 업로드에 실패했습니다!");
+              return;
+            }
+          }
+
+          console.log(imageURL);
+          console.log("Background Image URL:", `url(${imageURL})`);
+          console.log("Computed Style:", getComputedStyle(profilePlaceholder).backgroundImage);
             const profileImage = document.getElementById('selectedProfileImage');
             console.log(profileImage);
             const response = await fetch("http://localhost:8080/users", {
@@ -126,7 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   email: email.value,
                   password: password.value,
                   nickname: nickname.value,
-                  profileImage: (profileImage == null) || (profileImage.src == "") ? "" : profileImage.src,
+                  profileImage: (imageURL == '') ? '' : `/api/images/users/${profilePic.files[0].name}`,
+                  imageUrl: (imageURL == '') ? '' : `/api/images/users/${profilePic.files[0].name}`,
               })
           });
 
@@ -156,21 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   profilePic.addEventListener('change', async () => {
     const file = profilePic.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
 
-    const response = await fetch("/api/images", {
-        method: "POST",
-        body: formData
-    });
-    const imageURL = await response.text();
-    if(response.ok){
-      console.log("hi");
-    }
-    console.log(imageURL);
-    console.log("Background Image URL:", `url(${imageURL})`);
-    console.log("Computed Style:", getComputedStyle(profilePlaceholder).backgroundImage);
             if (file) {
+              const imageURL = URL.createObjectURL(file);
               // `+` 대신 `img` 태그로 변경
               profilePlaceholder.innerHTML = ""; // 기존 `+` 제거
               const imgElement = document.createElement("img");

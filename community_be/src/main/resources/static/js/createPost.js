@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupDropdownMenu(elements);
     setupValidationHandlers(elements);
     setupPostCreationHandler(userInfo, elements);
+    setupAddImageBtn(elements.addImageBtn)
 });
 
 function getDomElements() {
@@ -20,7 +21,8 @@ function getDomElements() {
         createBtn: document.getElementById('create-post-button'),
         postTitle: document.getElementById('create-post-form-title'),
         postInput: document.getElementById('create-post-body-text-input'),
-        createForm: document.getElementById('create-post-form')
+        createForm: document.getElementById('create-post-form'),
+        addImageBtn: document.getElementById('create-post-body-image-input'),
     };
 }
 
@@ -96,6 +98,21 @@ function setupPostCreationHandler(userInfo, { createForm, postTitle, postInput }
 }
 
 async function createPost(userInfo, title, content) {
+    const fileInput = document.getElementById('create-post-body-image-input');
+    const postImage = fileInput.files.length > 0 ? fileInput.files[0] : null;
+
+    const formData = new FormData();
+    formData.append("file", postImage);
+
+    const postImageresponse = await fetch("/api/images/posts", {
+        method: "POST",
+        body: formData
+    });
+    const postUrl = await postImageresponse.text();
+    if(!postImageresponse.ok){
+        throw new Error('네트워크에 문제가 발생했습니다');
+        return;
+    };
     const response = await fetch('http://localhost:8080/posts', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -112,9 +129,12 @@ async function createPost(userInfo, title, content) {
             comments: [],
             interactions: [],
             authorId: userInfo.id,
-            profileImage: userInfo.profileImage,
+            profileImage: userInfo.imageUrl,
+            postImageUrl: `/api/images/posts/${postImage.name}`
         })
     });
+
+    if(!postImageresponse.ok) throw new Error('네트워크에 문제가 발생했습니다');
     if (!response.ok) throw new Error('네트워크에 문제가 발생했습니다');
     return response.headers.get("Location");
 }

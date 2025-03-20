@@ -13,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Controller
@@ -35,7 +39,7 @@ public class UserController {
         System.out.println(user);
         System.out.println(user.getEmail());
         try {
-            User newUser = new User(user.getEmail(), user.getPassword(), user.getNickname(), user.getProfileImage());
+            User newUser = new User(user.getEmail(), user.getPassword(), user.getNickname(), user.getProfileImage(), user.getImageUrl());
             userService.saveUser(newUser);
             return ResponseEntity.ok("회원가입 성공");
         } catch (IllegalArgumentException e) {

@@ -1,5 +1,7 @@
 package hello.hello_spring.service;
 
+import hello.hello_spring.model.Post;
+import hello.hello_spring.repository.PostRepository;
 import hello.hello_spring.repository.UserRepository;
 import hello.hello_spring.model.User;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -7,11 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository){
+    private final PostRepository postRepository;
+    public UserService(UserRepository userRepository, PostRepository postRepository){
+        this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
 
@@ -43,6 +52,12 @@ public class UserService {
     @Transactional
     public void deleteUser(Long id) {
         try{
+            List<Post> userPosts = postRepository.findByUserId(id);
+            for (Post post : userPosts) {
+                if (post.getPostImageUrl() != null && !post.getPostImageUrl().isEmpty()) {
+                    deletePostImage(post.getPostImageUrl());
+                }
+            }
             userRepository.deleteById(id);
             System.out.println("유저 삭제 완료");
         }
@@ -55,6 +70,24 @@ public class UserService {
             e.printStackTrace();
             System.out.println("aasdfa-------------");
             throw new RuntimeException("예상치 못한 오류로 유저 정보 삭제에 실패했습니다.", e);
+        }
+    }
+
+    private void deletePostImage(String fileUrl) {
+        try {
+            String baseDirectory = "uploads/posts/"; // 파일이 저장된 기본 폴더
+            String fileName = Paths.get(new URI(fileUrl).getPath()).getFileName().toString();
+            Path filePath = Paths.get(baseDirectory, fileName);
+
+            // 파일 존재 여부 확인 후 삭제
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                System.out.println("이미지 삭제 완료: " + filePath);
+            } else {
+                System.out.println("삭제할 파일이 존재하지 않음: " + filePath);
+            }
+        } catch (Exception e) {
+            System.err.println("이미지 삭제 중 오류 발생: " + e.getMessage());
         }
     }
 }
