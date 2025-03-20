@@ -1,320 +1,3 @@
-// //과제 4: fetch API를 사용하기 때문에 function을 async로 수정
-// document.addEventListener("DOMContentLoaded", async () => {
-//   //과제4: url을 통해 특정 post의 id를 전달하도록 index.html에서 설정했음. 이를 활용해 서버에서 특정 게시글의 정보를 받아옴
-//   //URLSearchParams를 통해 url을 통해 전달될 특정 값을 key-value 단위로 만들어서 관리할 수 있음
-//   const postId = window.location.pathname.split("/").pop();
-  
-//   const editProfile = document.getElementById('editProfile');
-
-//   const postBody = document.getElementById("posts-body");
-//   const userInfo = await (await fetch("/auth/me")).json();
-  
-//   editProfile.addEventListener('click', () => {
-//     location.href=`/users/${userInfo.id}/edit`
-//   })
-
-//   try {
-//     const post = await fetchPostData(postId);
-
-//     if (post == null) {
-//       postBody.innerHTML = `<p>잘못된 접근입니다</p>`;
-//       return;
-//     }
-//     console.log(post.comments);
-//     const postComments = post.comments;
-
-//     postBody.innerHTML =
-//       `<div class="author-post-card">
-//             <h2 class="post-title">${post.title}</h2>
-//             <div class="post-meta">
-//                 <div class="author-profile"></div>
-//                 <div class="author-name">${post.author}</div>
-//                 <span class="post-date">${post.createdAt}</span>
-//                 <div class="buttons">
-//                     <button id="modify-post">수정</button>
-//                     <button id="delete-post">삭제</button>
-//                 </div>
-//             </div>
-//         </div>
-//         <hr class="divider">
-//         <div class="post-text">
-//             <img class="post-image" src="https://plus.unsplash.com/premium_photo-1701192799526-1a042fa6bdba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
-//             <div class="post-text-meta">
-//                 ${post.content}
-//             </div>
-//         </div>
-//         <div class="post-buttons">
-//             <div class="post-num-likes" id="like-button">
-//                 <div id="num-likes">${post.likeCount}</div>
-//                 <p>좋아요수</p>
-//             </div>
-//             <div class="post-num-views">
-//                 <p>${post.viewCount}</p>
-//                 <p>조회수</p>
-//             </div>
-//             <div class="post-num-comments">
-//                 <p>${post.commentCount}</p>
-//                 <p>댓글</p>
-//             </div>
-//         </div>
-//         <hr class="divider">
-//         <div class="post-write-comment">
-//             <form action="">
-//                <div class="post-write-comment-body">
-//                     <textarea name="" id="post-write-comment-text" placeholder="댓글을 입력해주세요!"></textarea>
-//                     <button class="registerCommentButton" id="register-comment-button" disabled>댓글 등록</button>
-//                </div>
-//             </form>
-//         </div>
-//         <div id="comment-section">
-//         </div>
-//         ` + postBody.innerHTML;
-
-//     //post에 comment가 있는 경우
-//     const commentSection = document.getElementById("comment-section");
-//     if (postComments.length != 0) {
-//       postComments.forEach((comment) => {
-//         console.log("id: " + comment.id);
-//         const commentElement = document.createElement("div");
-//         commentElement.classList.add("comment-post-card");
-
-//         if (comment.author == userInfo.nickname) {
-//           commentElement.innerHTML = `
-//           <div class="post-meta">
-//               <div class="author-profile"></div>
-//               <div class="author-name">${comment.author}</div>
-//               <span class="post-date">${new Date(
-//                 comment.createdAt
-//               ).toLocaleString()}</span>
-//                <div class="buttons">
-//                     <button class="modify-comment" id="modify-comment">수정</button>
-//                     <button class="delete-comment" id="delete-comment" data-id="${
-//                       comment.id
-//                     }">삭제</button>
-//                 </div>
-//           </div>
-//           <p class="post-card-text" id="postCardText">${comment.content}</p>`;
-
-//           commentSection.appendChild(commentElement);
-//         } else {
-//           commentElement.innerHTML = `
-//               <div class="post-meta">
-//                   <div class="author-profile"></div>
-//                   <div class="author-name">${comment.author}</div>
-//                   <span class="post-date">${new Date(
-//                     comment.createdAt
-//                   ).toLocaleString()}</span>
-//               </div>
-//               <p class="post-card-text" id="postCardText">${
-//                 comment.content
-//               }</p>`;
-
-//           commentSection.appendChild(commentElement);
-//         }
-//       });
-
-//       //Modify comment EventHandler
-//       const modifyCommentBtn = document.getElementById("modify-comment");
-//       const postCardText = document.getElementById("postCardText").innerText;
-//       modifyCommentBtn.addEventListener("click", () => {
-//         commentText.value = postCardText;
-//         commentText.dispatchEvent(new Event("input"));
-//         registerCommentBtn.textContent = "댓글 수정";
-//       });
-
-//       //Delete comment EventHandler
-//       //과제 4 추가 : DELETE 요청을 통한 comment 삭제, 기존에는 getElementById를 통해 button을 가져왔지만 특정 유저가
-//       //댓글을 2개 이상 다는 경우, getElementById는 최우선으로 나오는 comment에만 작동하게 되므로 querySelector를 이용한
-//       //방식으로 교체. querySelector의 경우, class 이름을 기준으로 찾으므로 수정, 삭제 버튼에 클래스 이름 추가
-//       const commentModalOverlay = document.getElementById(
-//         "commentModalOverlay"
-//       );
-
-//       //model에서 삭제해야 할 댓글의 아이디를 기억하기 위해 사용하는 임시 변수.
-//       let commentModalId;
-
-//       console.log(document.querySelectorAll(".delete-comment"));
-//       document.querySelectorAll(".delete-comment").forEach((button) => {
-//         button.addEventListener("click", (e) => {
-//           if (e.target.classList.contains("delete-comment")) {
-//             e.preventDefault();
-//             let commentId = button.getAttribute("data-id");
-//             commentModalId = commentId;
-//             commentModalOverlay.style.display = "flex";
-//             document.body.style.overflow = "hidden";
-//           }
-//         });
-//       });
-
-//       const commentCancelButton = document.getElementById(
-//         "commentCancelButton"
-//       );
-//       const commentConfirmButton = document.getElementById(
-//         "commentConfirmButton"
-//       );
-
-//       commentCancelButton.addEventListener("click", () => {
-//         commentModalOverlay.style.display = "none";
-//         document.body.style.overflow = "auto";
-//       });
-
-//       commentConfirmButton.addEventListener("click", async (e) => {
-//         e.preventDefault();
-//         const deleteCommentResponse = await fetch(
-//           `http://localhost:8080/comments/${commentModalId}`,
-//           {
-//             method: "DELETE",
-//           }
-//         );
-
-//         if (!deleteCommentResponse.ok) {
-//           alert("댓글 삭제에 실패했습니다.");
-//           return;
-//         }
-//         commentModalOverlay.style.display = "none";
-//         document.body.style.overflow = "auto";
-//         alert("댓글이 성공적으로 삭제되었습니다!");
-//         location.reload();
-//       });
-//     }
-//     else{
-//       commentSection.innerHTML = "<p> 댓글이 존재하지 않습니다. </p>"
-//     }
-//   } catch (error) {}
-
-//   //Like EventHandler
-//   const likeButton = document.getElementById("like-button");
-//   likeButton.addEventListener("click", () => {
-//     const numLikes = document.getElementById("num-likes");
-//     const element = document.getElementsByClassName("post-num-likes")[0];
-//     const style = getComputedStyle(element);
-//     const bgColor = style["background-color"];
-
-//     if (rgbToHex(bgColor) == "#d9d9d9") {
-//       element.style.backgroundColor = "#ACA0EB";
-//       console.log(numLikes.innerText);
-//       numLikes.innerText = Number(numLikes.innerText) + 1;
-//     } else if (rgbToHex(bgColor) == "#aca0eb") {
-//       element.style.backgroundColor = "#d9d9d9";
-//       numLikes.innerText = Number(numLikes.innerText) - 1;
-//     }
-//   });
-
-//   //CommentText Change EventHandler
-//   const registerCommentBtn = document.getElementById("register-comment-button");
-//   const commentText = document.getElementById("post-write-comment-text");
-//   commentText.addEventListener("input", () => {
-//     const content = commentText.value.trim();
-
-//     if (content.length == 0) {
-//       registerCommentBtn.disabled = true;
-//       registerCommentBtn.style.backgroundColor = "#aca0eb";
-//     } else {
-//       registerCommentBtn.disabled = false;
-//       registerCommentBtn.style.backgroundColor = "#7f6aee";
-//     }
-//   });
-
-//   //header profile icon handelr
-//   const dropdown = document.getElementById("dropdown");
-//   const profileIcon = document.getElementById("profile-icon");
-
-//   profileIcon.addEventListener("click", (e) => {
-//     e.stopPropagation();
-//     dropdown.classList.toggle("show");
-//   });
-
-//   window.addEventListener("click", () => {
-//     dropdown.classList.remove("show");
-//   });
-
-//   //Modify post EventHandler
-//   const modifyPostBtn = document.getElementById("modify-post");
-//   modifyPostBtn.addEventListener("click", () => {
-//     location.href = `/posts/${postId}/edit`;
-//   });
-
-//   //Delete post button Eventhandler
-//   const deletePostBtn = document.getElementById("delete-post");
-//   const postModalOverlay = document.getElementById("postModalOverlay");
-//   deletePostBtn.addEventListener("click", (e) => {
-//     e.preventDefault();
-//     postModalOverlay.style.display = "flex";
-//     document.body.style.overflow = "hidden";
-//   });
-
-//   //Comment Button Click EventHandler
-//   registerCommentBtn.addEventListener("click", async (e) => {
-//     e.preventDefault();
-//     console.log(postId);
-//     if (registerCommentBtn.textContent === "댓글 수정") {
-//       document.getElementById("postCardText").innerHTML = commentText.value;
-//       registerCommentBtn.textContent = "댓글 등록";
-//     }
-
-//     //과제4: 특정 포스트에 댓글 추가하기
-//     const newComment = {
-//       author: userInfo.nickname,
-//       content: commentText.value,
-//       onPostId: postId,
-//     };
-
-//     try {
-//       const createCommentResponse = await fetch(
-//         `http://localhost:8080/comments`,
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify(newComment),
-//         }
-//       );
-
-//       if (!createCommentResponse.ok) {
-//         throw new Error("댓글 작성에 실패했습니다.");
-//       }
-
-//       alert("댓글이 성공적으로 작성되었습니다!");
-
-//       commentText.value = "";
-//       commentText.dispatchEvent(new Event("input"));
-
-//       location.reload();
-//     } catch (error) {
-//       console.error("댓글 작성 중 오류 발생:", error);
-//     }
-//   });
-
-//   //post modal EventHandler
-//   const postCancelButton = document.getElementById("postCancelButton");
-//   const postConfirmButton = document.getElementById("postConfirmButton");
-
-//   postCancelButton.addEventListener("click", () => {
-//     postModalOverlay.style.display = "none";
-//     document.body.style.overflow = "auto";
-//   });
-
-//   //과제 4 추가: DELETE 요청을 통해 게시글 삭제 버튼 클릭시 게시글을 목록에서 삭제 후 index.html에 반영
-//   postConfirmButton.addEventListener("click", async (e) => {
-//     e.preventDefault();
-
-//     const deleteResponse = await fetch(`http://localhost:8080/posts/${postId}`, {
-//         method: "DELETE"
-//     });
-
-//     if (!deleteResponse.ok) {
-//         throw new Error("게시글 삭제 실패");
-//     }
-
-//     alert("게시글이 삭제되었습니다.");
-
-//     postModalOverlay.style.display = "none";
-//     document.body.style.overflow = "auto";
-//     location.href = '/index';
-//   });
-// });
-
 const likeBtnEnabled = "#d9d9d9";
 const likeBtnDisabled = "#ACA0EB";
 const btnEnabled = "";
@@ -489,7 +172,7 @@ function renderPost(userInfo, post, postBody){
             <div class="post-meta">
                 <div class="author-profile"></div>
                 <div class="author-name">${post.author}</div>
-                <span class="post-date">${post.createdAt}</span>
+                <span class="post-date">${convertDate(post.createdAt)}</span>
                 <div class="buttons">
                     <button id="modify-post">수정</button>
                     <button id="delete-post">삭제</button>
@@ -498,7 +181,7 @@ function renderPost(userInfo, post, postBody){
         </div>
         <hr class="divider">
         <div class="post-text">
-            <img class="post-image" src="https://plus.unsplash.com/premium_photo-1701192799526-1a042fa6bdba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+            <img class="post-image" src="${post.profileImage}" alt="">
             <div class="post-text-meta">
                 ${post.content}
             </div>
@@ -537,12 +220,12 @@ function renderPost(userInfo, post, postBody){
             <div class="post-meta">
                 <div class="author-profile"></div>
                 <div class="author-name">${post.author}</div>
-                <span class="post-date">${post.createdAt}</span>
+                <span class="post-date">${convertDate(post.createdAt)}</span>
             </div>
         </div>
         <hr class="divider">
         <div class="post-text">
-            <img class="post-image" src="https://plus.unsplash.com/premium_photo-1701192799526-1a042fa6bdba?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+            <img class="post-image" src="${post.profileImage}" alt="">
             <div class="post-text-meta">
                 ${post.content}
             </div>
@@ -590,11 +273,9 @@ function renderComments(postComments, commentSection, userInfo){
       if (comment.onUserId == userInfo.id) {
         commentElement.innerHTML = `
         <div class="post-meta">
-            <div class="author-profile"></div>
+            <div class="author-profile"><img src="${comment.profileImage}" id="comment-image"></div>
             <div class="author-name">${comment.author}</div>
-            <span class="post-date">${new Date(
-              comment.createdAt
-            ).toLocaleString()}</span>
+            <span class="post-date">${convertDate(comment.modifiedAt)}</span>
              <div class="buttons">
                   <button class="modify-comment" id="modify-comment">수정</button>
                   <button class="delete-comment" id="delete-comment" data-id="${
@@ -608,11 +289,9 @@ function renderComments(postComments, commentSection, userInfo){
       } else {
         commentElement.innerHTML = `
             <div class="post-meta">
-                <div class="author-profile"></div>
+                <div class="author-profile"><img src="${comment.profileImage}" id="comment-image"></div>
                 <div class="author-name">${comment.author}</div>
-                <span class="post-date">${new Date(
-                  comment.createdAt
-                ).toLocaleString()}</span>
+                <span class="post-date">${convertDate(comment.modifiedAt)}</span>
             </div>
             <p class="post-card-text" id="postCardText">${
               comment.content
@@ -668,9 +347,11 @@ function setupRegisterCommentHandler({registerCommentBtn, commentText, postId}, 
     //과제4: 특정 포스트에 댓글 추가하기
     const newComment = {
       author: userInfo.nickname,
+      profileImage: userInfo.profileImage,
       content: commentText.value,
       onPostId: postId,
       onUserId: userInfo.id,
+      modifiedAt: new Date().toISOString(),
     };
 
     try {
@@ -826,4 +507,20 @@ function setupCommentModalHandler({commentCancelButton, commentModalOverlay, com
                 alert("댓글이 성공적으로 삭제되었습니다!");
                 location.reload();
               });
+}
+
+function convertDate(serverDate){
+  const date = new Date(serverDate);
+  const formattedDate = date.toLocaleString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false // 24시간 형식
+  });
+  formattedDate.replace(/. /g, '-').replace('.', '');
+  console.log("formatted date: " + formattedDate);
+  return formattedDate;
 }

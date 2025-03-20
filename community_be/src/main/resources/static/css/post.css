@@ -173,6 +173,14 @@
     border-radius: 50%;
   }
   
+  .author-profile #comment-image{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-repeat: none;
+    background-size: cover;
+  }
+
   .author-name {
     font-weight: bold;
     margin-left: 0.5rem;

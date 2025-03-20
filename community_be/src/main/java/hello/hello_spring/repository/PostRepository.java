@@ -11,11 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Post p WHERE p IN :posts")
-    void deleteAllByPostIn(@Param("posts") List<Post> posts);
-
     @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL")
     List<Post> findAllActivePosts();
 

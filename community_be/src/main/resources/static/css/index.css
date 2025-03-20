@@ -205,6 +205,14 @@
     border-radius: 50%;
   }
   
+  .author-profile img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-repeat: none;
+  }
+
   .author-name {
     background-color: white;
     font-weight: bold;

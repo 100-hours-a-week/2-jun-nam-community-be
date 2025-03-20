@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //System.out.println("before try----------------");
         try{
             const profileImage = document.getElementById('selectedProfileImage');
+            console.log(profileImage);
             const response = await fetch("http://localhost:8080/users", {
               method: "POST",
               headers: {
@@ -125,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   email: email.value,
                   password: password.value,
                   nickname: nickname.value,
-                  profileImage: profileImage.src,
+                  profileImage: (profileImage == null) || (profileImage.src == "") ? "" : profileImage.src,
               })
           });
 
@@ -167,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("hi");
     }
     console.log(imageURL);
-    var testURL = 'https://plus.unsplash.com/premium_photo-1734543942868-2470c4cba7b5?q=80&w=3200&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
     console.log("Background Image URL:", `url(${imageURL})`);
     console.log("Computed Style:", getComputedStyle(profilePlaceholder).backgroundImage);
             if (file) {

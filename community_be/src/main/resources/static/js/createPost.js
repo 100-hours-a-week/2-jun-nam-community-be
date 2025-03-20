@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const elements = getDomElements();
     const userInfo = await fetchUserInfo();
     console.log(userInfo);
-    setupProfileEdit(userInfo, elements.editProfile);
+    setupProfileEdit(userInfo, elements.editProfile, elements.profileIcon);
     setupPasswordEdit(userInfo, elements.changePassword);
     setupLogout(elements.logout);
     setupDropdownMenu(elements);
@@ -30,7 +30,8 @@ async function fetchUserInfo() {
     return user;
 }
 
-function setupProfileEdit(userInfo, editProfile){
+function setupProfileEdit(userInfo, editProfile, profileIcon){
+    profileIcon.src = userInfo.profileImage;
     editProfile.addEventListener("click", (e) => {
       e.preventDefault();
       console.log(userInfo.id + ' ' + editProfile);
@@ -111,6 +112,7 @@ async function createPost(userInfo, title, content) {
             comments: [],
             interactions: [],
             authorId: userInfo.id,
+            profileImage: userInfo.profileImage,
         })
     });
     if (!response.ok) throw new Error('네트워크에 문제가 발생했습니다');

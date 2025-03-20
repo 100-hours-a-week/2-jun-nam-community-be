@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupDropdownMenu(elements);
     setupProfileEdit(userInfo, elements.editProfile);
     setupPasswordEdit(userInfo, elements.changePassword);
-    setupDeleteAccount(userInfo.id, elements.deleteAccount);
+    setupDeleteAccount(userInfo.id, elements.deleteAccountConfirmButton);
     setupModifyComplete(elements.modifyComplete);
     setupLogout(elements.logout);
 });
@@ -172,7 +172,7 @@ function setupProfileEdit(userInfo, editProfile){
 
             if(response.ok){
                 alert("회원탈퇴가 정상적으로 진행되었습니다.");
-                location.href = "/";
+                location.href = "http://localhost:8080/";
             }else {
                 alert("회원탈퇴 처리에 실패했습니다.");
             }

@@ -102,11 +102,11 @@ function renderPostCard(post) {
                 <span id="likes">좋아요 ${post.likeCount}</span>
                 <span id="comments">댓글 ${post.commentCount}</span>
                 <span id="views">조회수 ${post.viewCount}</span>
-                <span class="post-date">${post.createdAt}</span>
+                <span class="post-date">${convertDate(post.createdAt)}</span>
             </div>
             <hr class="divider">
             <div class="post-author">
-                <div class="author-profile"></div>
+                <div class="author-profile"><img src="${post.profileImage}" id="author-profile-image"></div>
                 <div class="author-name">${post.author}</div>
             </div>
         </div>
@@ -126,4 +126,20 @@ function setupCreatePostBtn(createPostButton) {
     createPostButton.addEventListener('click', () => {
         location.href = "/posts/write";
     })
+}
+
+function convertDate(serverDate){
+    const date = new Date(serverDate);
+    const formattedDate = date.toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false // 24시간 형식
+    });
+    formattedDate.replace(/. /g, '-').replace('.', '');
+    console.log("formatted date: " + formattedDate);
+    return formattedDate;
 }
