@@ -26,7 +26,7 @@ public class Post {
     private Integer viewCount;
     private Long authorId;
     private String profileImage;
-
+    private String postImageUrl;
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt; // NULL이면 삭제되지 않은 상태
 
@@ -172,5 +172,13 @@ public class Post {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public String getPostImageUrl() {
+        return postImageUrl;
+    }
+
+    public void setPostImageUrl(String postImageUrl) {
+        this.postImageUrl = postImageUrl;
     }
 }

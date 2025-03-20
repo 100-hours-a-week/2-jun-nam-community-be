@@ -12,7 +12,7 @@ function getDomElements() {
         logout: document.getElementById("logout"),
         profileIcon: document.getElementById("profile-icon"),
         createPostButton: document.getElementById('create-post-button'),
-        postList: document.getElementById('postList')
+        postList: document.getElementById('postList'),
     };
 }
 

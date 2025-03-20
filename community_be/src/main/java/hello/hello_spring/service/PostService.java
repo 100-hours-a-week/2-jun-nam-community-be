@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,31 +86,14 @@ public class PostService {
                 throw new RuntimeException("해당 게시글을 삭제할 권한이 없습니다.");
             }
 
-//            // 1️⃣ 연관된 Comments 삭제
-//            System.out.println("[debug post get comments]: "+ post.getComments());
-//            System.out.println("[debug post get interactions]: "+ post.getInteractions());
-//            post.getComments().clear();
-////
-////            // 2️⃣ 연관된 PostInteractions 삭제
-//            postInteractionRepository.deleteByPostId(id);
-////
-//            System.out.println(post.getId());
-////            user.getComments().removeIf(comment -> comment.getPost().getId().equals(post.getId()));
-//            user.getInteractions().clear();
-//            user.getInteractions().removeIf(interaction -> interaction.getPost().equals(post));
-//            postRepository.delete(post);
-//            user.deletePost(post);
-//            System.out.println("[debug]: 123456789");
-////
-////
-////            postRepository.delete(post);
-//            System.out.println("게시글 삭제 완료");
-////
-////            postRepository.flush();
-            // ✅ Soft Delete 적용
+            if (post.getPostImageUrl() != null && !post.getPostImageUrl().isEmpty()) {
+                deletePostImage(post.getPostImageUrl());
+            }
+
+            //Soft Delete 적용
             post.softDelete();
 
-            // ✅ 변경 사항 저장 (UPDATE 실행됨)
+            //변경 사항 저장 (UPDATE 실행됨)
             postRepository.save(post);
 
             cleanupDeletedPosts(user);
@@ -166,4 +153,24 @@ public class PostService {
            this.savePost(post);
         }
     }
+
+    private void deletePostImage(String fileUrl) {
+        try {
+            String baseDirectory = "uploads/posts/"; // 파일이 저장된 기본 폴더
+            String fileName = Paths.get(new URI(fileUrl).getPath()).getFileName().toString();
+            Path filePath = Paths.get(baseDirectory, fileName);
+
+            // 파일 존재 여부 확인 후 삭제
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                System.out.println("이미지 삭제 완료: " + filePath);
+            } else {
+                System.out.println("삭제할 파일이 존재하지 않음: " + filePath);
+            }
+        } catch (Exception e) {
+            System.err.println("이미지 삭제 중 오류 발생: " + e.getMessage());
+        }
+    }
 }
+
+

@@ -17,7 +17,7 @@ public class User {
     private String password;
     private String nickname;
     private String profileImage;
-
+    private String imageUrl;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference(value = "user-comments")
     @JsonIgnore
@@ -36,11 +36,12 @@ public class User {
     public User(){
 
     }
-    public User(String email, String password, String nickname, String profileImage){
+    public User(String email, String password, String nickname, String profileImage, String imageUrl){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImage = profileImage;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -113,5 +114,13 @@ public class User {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

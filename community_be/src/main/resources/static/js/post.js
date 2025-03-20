@@ -6,13 +6,13 @@ const btnDisabled = "";
 document.addEventListener("DOMContentLoaded", async () => {
   const staticElements = getDomStaticElements();
   const userInfo = await fetchUserInfo(staticElements.profileIcon);
-  setupStaticEventListeners(userInfo, staticElements);
-
   const post = await fetchPostData(staticElements.postId);
   if (!post) {
     staticElements.postBody.innerHTML = `<p>잘못된 접근입니다</p>`;
       return;
   }
+  setupStaticEventListeners(userInfo, post, staticElements);
+
   renderPost(userInfo, post, staticElements.postBody);
   renderComments(post.comments, staticElements.commentSection, userInfo);
   let dynamicElements;
@@ -75,12 +75,12 @@ function getDomDynamicElements() {
   };
 }
 
-function setupStaticEventListeners(userInfo, elements){
+function setupStaticEventListeners(userInfo, post, elements){
   setupProfileEdit(userInfo, elements.editProfile);
   setupPasswordEdit(userInfo, elements.changePassword);
   setupLogout(elements.logout);
   setupDropdownMenu(elements);
-  setupPostModalHandler(elements);
+  setupPostModalHandler(post, elements);
   setupCommentModalHandler(elements);
 }
 
@@ -170,7 +170,7 @@ function renderPost(userInfo, post, postBody){
       `<div class="author-post-card">
             <h2 class="post-title">${post.title}</h2>
             <div class="post-meta">
-                <div class="author-profile"></div>
+                <div class="author-profile"><img src="${userInfo.profileImage}" id="author-post-image"></div>
                 <div class="author-name">${post.author}</div>
                 <span class="post-date">${convertDate(post.createdAt)}</span>
                 <div class="buttons">
@@ -181,7 +181,7 @@ function renderPost(userInfo, post, postBody){
         </div>
         <hr class="divider">
         <div class="post-text">
-            <img class="post-image" src="${post.profileImage}" alt="">
+            <img class="post-image" src="${post.postImageUrl}" alt="">
             <div class="post-text-meta">
                 ${post.content}
             </div>
@@ -218,7 +218,7 @@ function renderPost(userInfo, post, postBody){
       `<div class="author-post-card">
             <h2 class="post-title">${post.title}</h2>
             <div class="post-meta">
-                <div class="author-profile"></div>
+                <div class="author-profile"><img src="${userInfo.profileImage}" id="author-post-image"></div>
                 <div class="author-name">${post.author}</div>
                 <span class="post-date">${convertDate(post.createdAt)}</span>
             </div>
@@ -451,7 +451,7 @@ function setupDeleteCommentHandler({deleteCommentBtn, commentModalOverlay}){
   });
 }
 
-function setupPostModalHandler({postCancelButton, postModalOverlay, postId, postConfirmButton}){
+function setupPostModalHandler(post, {postCancelButton, postModalOverlay, postId, postConfirmButton}){
   postCancelButton.addEventListener("click", () => {
         postModalOverlay.style.display = "none";
         document.body.style.overflow = "auto";
@@ -460,7 +460,11 @@ function setupPostModalHandler({postCancelButton, postModalOverlay, postId, post
       //과제 4 추가: DELETE 요청을 통해 게시글 삭제 버튼 클릭시 게시글을 목록에서 삭제 후 index.html에 반영
       postConfirmButton.addEventListener("click", async (e) => {
         e.preventDefault();
-    
+        
+        const postImageResponse = await fetch(`${post.postImageUrl}`, {
+          method: "DELETE"
+      });
+
         const deleteResponse = await fetch(`http://localhost:8080/posts/${postId}`, {
             method: "DELETE"
         });
