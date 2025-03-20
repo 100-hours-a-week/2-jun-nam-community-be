@@ -1,0 +1,222 @@
+* {
+    background-color: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    overflow-y: auto;
+  }
+  
+  /* 제목 영역 */
+  .index-title {
+    margin: 2vh;
+  }
+  
+  /* 헤더 영역 */
+  .index-header {
+    position: relative; /* 자식 요소의 절대 위치 기준 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 104px;
+    margin: 1vh;
+  }
+  
+  .index-header h1{
+    width: 592px;
+  }
+
+  .index-header img{
+    position: absolute;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    margin-left: 526px;
+}
+  
+  .index-header img:hover {
+    cursor: pointer;
+  }
+  
+  /* 드롭다운 메뉴 */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 5vh;
+    margin-left: 35%;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 150px;
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+  }
+  
+  .dropdown-menu ul {
+    list-style: none;
+  }
+  
+  .dropdown-menu li {
+    text-align: center;
+    padding: 0.5rem;
+    background-color: lightgrey;
+  }
+  
+  .dropdown-menu li a {
+    background-color: lightgrey;
+    text-decoration: none;
+    color: black;
+  }
+  
+  /* 본문 영역 */
+  .index-body {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 40px;
+  }
+  
+  .index-title p {
+    text-align: center;
+    font-size: 24px;
+  }
+  
+  /* 게시글 작성 버튼 */
+  .index-create-post-button {
+    display: flex;
+    justify-content: flex-end;
+    height: 64px;
+    width: 600px;
+    margin: 2vh 0 0 1vh;
+  }
+  
+  .index-create-post-button button {
+    background-color: #ACA0EB;
+    color: white;
+    text-align: center;
+    border: none;
+    border-radius: 16px;
+    height: 39px;
+    width: 138px;
+    font-weight: bold;
+  }
+  
+  .index-create-post-button button:hover {
+    background-color: #7F6AEE;
+    box-shadow: 0 0 10px 0 blueviolet inset, 0 0 10px 4px;
+    text-shadow: 0 0 10px 0 black inset, 0 0 10px 4px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+  
+  /* 게시글 목록 */
+  .post-list {
+    width: 592px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+.post-card {
+  background-color: white;
+  width: 100%;
+  height: 169px;
+  margin: 10px auto;
+  border-radius: 12px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease-in-out forwards;
+}
+
+/* 페이드 인 & 위로 올라오는 효과 */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 2️⃣ 게시글 Hover 시 카드가 살짝 떠오르도록 */
+.post-card:hover {
+  cursor: pointer;
+  transform: scale(1.02);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+}
+  
+  /* 게시글 제목 및 메타 정보 */
+  .post-title {
+    background-color: white;
+    margin: 1vh;
+    padding-top: 1vh;
+    font-size: 24px;
+  }
+  
+  .post-meta,
+  .post-meta * {
+    display: flex;
+    justify-content: flex-start;
+    background-color: transparent;
+  }
+  
+  .post-meta {
+    margin: 1vh;
+  }
+  
+  .post-date {
+    margin-left: auto;
+  }
+  
+  .post-meta span {
+    margin-right: 1vh;
+    font-size: 14px;
+  }
+  
+  /* 구분선 */
+  .divider {
+    background-color: #f4f5f7;
+    height: 1px;
+  }
+  
+  /* 작성자 정보 */
+  .post-author {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    margin: 1vh;
+    height: 36px;
+  }
+  
+  .author-profile {
+    width: 36px;
+    height: 36px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+  }
+  
+  .author-profile img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-repeat: none;
+  }
+
+  .author-name {
+    background-color: white;
+    font-weight: bold;
+    margin: 1vh;
+    font-size: 15px;
+  }
+  

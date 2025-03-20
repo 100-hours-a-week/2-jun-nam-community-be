@@ -1,0 +1,132 @@
+/* Global Styles */
+* {
+    background-color: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    overflow-y: auto;
+  }
+
+.sign-up-header{
+    position: relative; /* 자식 요소의 절대 위치 기준 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 104px;
+    margin: 1vh;
+}
+
+.sign-up-header button{
+    position: absolute;
+    margin-right: 526px;
+    border: transparent;
+    font-size: 2rem;
+}
+
+.sign-up-header button:hover{
+    cursor: pointer;
+}
+
+.container h1 {
+   text-align: center;
+}
+
+.signUpForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 90vh;
+    width: 100vw;
+}
+
+.signUpForm #form{
+    width: 392px;
+}
+
+.signUpForm h2{
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    text-align: left;
+    display: block;
+    margin-top: 0.5vh;
+    margin-bottom: 1vh;
+    margin-left: 30px;
+    font-weight: bold; 
+    font-size: 15px;
+    width: 355px;
+}
+
+.input-group input{
+    width: 355px;
+    box-sizing: border-box;
+    padding: 0.5em;
+    border-width: 0.1vw;
+    margin-left: 18.5px;
+    border-radius: 0.5vw;
+}
+
+.input-group p {
+    font-size: 1rem;
+    margin-top: 0.5vh;
+    margin-left: 30px;
+    color: red;
+    text-align: left;
+}
+
+.signUpForm #signupbutton {
+    background-color: #ACA0EB;
+    color: white;
+    text-align: center;
+    border-color: transparent;
+    width: 355px;
+    height: 33px;
+    margin-left: 18.5px;
+    margin-top: 0.5vh;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.signUpForm #backtologin {
+    border: none;
+    outline: none;
+    background-color: inherit ;
+    cursor: pointer;
+    margin: 10px;
+    margin-top: 1vh;
+    font-size: 14px;
+    margin-left: 25px;
+}
+
+.profile-upload {
+    margin-bottom: 20px;
+}
+
+.profile-upload label{
+    font-weight: bold;
+    display: flex;
+    text-align: left;
+}
+
+.profile-placeholder {
+    width: 149px;
+    height: 149px;
+    background-color: #ccc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background 0.3s;
+}

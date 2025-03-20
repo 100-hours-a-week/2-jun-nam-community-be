@@ -1,0 +1,257 @@
+/* Global Styles */
+* {
+    background-color: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    overflow-y: auto;
+  }
+
+.container h1 {
+   text-align: center;
+}
+
+.editProfile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 90vh;
+    width: 100vw;
+}
+
+.editProfile h2{
+    font-size: 32px;
+    margin-bottom: 16px;
+}
+
+.editProfile #form{
+    width: 392px;
+}
+
+.header{
+    position: relative; /* 자식 요소의 절대 위치 기준 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 104px;
+    margin: 1vh;
+}
+
+.header img{
+    position: absolute;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    margin-left: 526px;
+}
+
+.dropdown-menu{
+    display:none;
+    position: absolute;
+    top: 5vh;
+    margin-left: 30vw;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 150px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu ul{
+    list-style: none;
+}
+
+.dropdown-menu li{
+    text-align: center;
+    padding: 0.5rem;
+    background-color: lightgrey;
+}
+
+.dropdown-menu li a{
+    background-color: lightgrey;
+    text-decoration-line: none;
+    color: black;
+}
+
+.input-group label {
+    text-align: left;
+    display: block;
+    margin-top: 0.5vh;
+    margin-bottom: 1vh;
+    margin-left: 30px;
+    font-weight: bold; 
+    font-size: 15px;
+    width: 355px;
+}
+
+.input-group input{
+    width: 355px;
+    box-sizing: border-box;
+    padding: 0.5em;
+    border-width: 0.1vw;
+    margin-left: 18.5px;
+    border-radius: 0.5vw;
+}
+
+.input-group p {
+    font-size: 1rem;
+    margin-top: 0.5vh;
+    margin-left: 30px;
+    color: red;
+    text-align: left;
+}
+
+#email{
+    color:black;
+}
+
+.input-group #change-profile-pic{
+    width: 10%;
+}
+
+.profile-placeholder{
+    position: relative;
+    display: inline-block;
+    min-height: 10vw;
+    min-width: 10vw;
+}
+
+.profile-placeholder img{
+    height: 149px;
+    width: 149px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.profile-placeholder img:hover{
+    background-color: #E9E9E9;
+}
+
+.change-profile-pic{
+    position: absolute;
+    background-color: black;
+    color: white;
+    border-radius: 12rem;
+    opacity: 70%;
+    width: 52px;
+    height: 27px;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 10%;
+}
+
+.change-profile-pic:hover{
+    filter: brightness(60%);
+    transition: filter 0.3s ease;
+}
+
+
+
+.editProfile #modify-button {
+    background-color: #ACA0EB;
+    color: white;
+    text-align: center;
+    border-color: transparent;
+    width: 355px;
+    height: 33px;
+    margin-left: 18.5px;
+    margin-top: 0.5vh;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.editProfile #delete-account {
+    border: none;
+    outline: none;
+    background-color: inherit ;
+    cursor: pointer;
+    margin: 10px 10px 10px 25px;;
+    margin-top: 1vh;
+    font-size: 14px;
+}
+
+.modify-complete{
+    background-color: #ACA0EB;
+    color: white;
+    text-align: center;
+    border-color: transparent;
+    border-radius: 30px;
+    margin-top: 2vh;
+    margin-left: 18.5px;
+    font-size: 18px;
+    width: 102px;
+    height: 46px;
+}
+
+.delete-account-modal-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.modal-subtitle {
+    background-color: transparent;
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 16px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    width: 48%;
+    padding: 10px 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+#deleteAccountCancelButton {
+    background-color: black;
+    color: white;
+}
+
+#deleteAccountConfirmButton {
+    background-color: #ACA0EB;
+    color: white;
+}

@@ -1,0 +1,149 @@
+*{
+    background-color: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    margin: 0;
+    height: clamp(60vh, 100vh, 100vh); 
+    width: clamp(60vw, 100vw, 100vw);
+    overflow-y:auto;
+}
+
+.create-post-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 5vh;
+    margin: 1vh;
+}
+
+.create-post-header img{
+    position: absolute;
+    height: 3vh;
+    width: 3vh;
+    border-radius: 50%;
+    margin-left: 35vw;
+}
+
+.create-post-header img:hover{
+    cursor: pointer;
+}
+
+#back-button{
+    position: absolute;
+    margin-right: 35vw;
+    border: transparent;
+    font-size: 2rem;
+}
+
+.dropdown-menu{
+    display:none;
+    position: absolute;
+    top: 5vh;
+    margin-left: 30vw;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 150px;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu ul{
+    list-style: none;
+}
+
+.dropdown-menu li{
+    text-align: center;
+    padding: 0.5rem;
+    background-color: lightgrey;
+}
+
+.dropdown-menu li a{
+    background-color: lightgrey;
+    text-decoration-line: none;
+    color: black;
+}
+
+.create-post-body{
+    min-height: 90vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-post-title p{
+    margin: 2vh;
+    display: block;
+    font-weight: bold;
+    font-size: 1.5vh;
+}
+
+.create-post-body form{
+    width: 40%;
+    justify-content: center;
+    align-items: center;
+    margin-top:3vh;
+}
+
+.input-group{
+    margin-top: 1vh;
+}
+
+.input-group label{
+    font-weight: bold;
+}
+
+.input-group label #label-for-file{
+    margin-top: 2vh;
+}
+
+.input-group input{
+    width: 100%;
+    margin-top: 0.5vh;
+    height: 2vh;
+    box-sizing: border-box;
+    border-color:transparent;
+}
+
+.input-group textarea{
+    width: 100%;
+    margin-top: 1vh;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+.input-group hr{
+    margin-top: 1vh;
+}
+
+
+#create-post-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ACA0EB;
+    color: white;
+    text-align: center;
+    border-color: transparent;
+    width: 70%;
+    height: 2.5vh;
+    margin-left: 15%;
+    margin-top: 2vh;
+    font-size: 0.8vw;
+}
+
+.select-file{
+    margin-top: 2vh;
+}

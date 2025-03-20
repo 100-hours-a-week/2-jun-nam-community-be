@@ -1,0 +1,354 @@
+/* Global Styles */
+* {
+    background-color: #f4f5f7;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    overflow-y: auto;
+  }
+  
+  /* Post Header */
+  .post-header {
+    position: relative; /* 자식 요소의 절대 위치 기준 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 104px;
+    margin: 1vh;
+  }
+  
+  .post-header h1 {
+    width: 592px;
+  }
+  
+  .post-header img {
+    position: absolute;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    margin-left: 526px;
+  }
+  
+  #back-button {
+    position: absolute;
+    margin-right: 526px;
+    border: transparent;
+    font-size: 2rem;
+  }
+  
+  /* Dropdown Menu */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 5vh;
+    margin-left: 30vw;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 150px;
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+  }
+  
+  .dropdown-menu ul {
+    list-style: none;
+  }
+  
+  .dropdown-menu li {
+    text-align: center;
+    padding: 0.5rem;
+    background-color: lightgrey;
+  }
+  
+  .dropdown-menu li a {
+    display: block;
+    padding: 0.5rem;
+    background-color: lightgrey;
+    text-decoration: none;
+    color: black;
+  }
+  
+  /* Post Body */
+  .posts-body {
+    height: 90%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+  }
+  
+  /* Buttons */
+  .buttons {
+    margin-left: auto;
+  }
+  
+  .buttons button {
+    width: 3vw;
+    text-align: center;
+    align-items: center;
+    border-radius: 7px;
+    background-color: white;
+    border-color: #ACA0EB;
+    margin-left: 0.3rem;
+    justify-content: center;
+  }
+  
+  .buttons button:hover {
+    cursor: pointer;
+  }
+  
+  /* Post Cards */
+  .author-post-card,
+  .comment-post-card {
+    width: 544px;
+    height: 87px;
+    margin: 1vh auto;
+    border-radius: 12px;
+  }
+  
+  .post-text {
+    width: 544px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .post-title {
+    margin: 1vh;
+    padding-top: 1vh;
+  }
+  
+  /* Post Meta Data */
+  .post-meta,
+  .post-meta * {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  .post-meta {
+    margin: 1vh;
+  }
+  
+  .post-meta span {
+    margin-right: 1vh;
+    font-size: 0.5em;
+  }
+  
+  .post-date {
+    margin-left: 1vw;
+  }
+  
+  /* Divider */
+  .divider {
+    width: 592px;
+    height: 1px;
+    margin: 20px;
+  }
+  
+  /* Post Author */
+  .post-author {
+    display: flex;
+    align-items: center;
+    margin: 1vh;
+  }
+  
+  .author-profile {
+    width: 2em;
+    height: 2em;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+  }
+  
+  .author-profile #comment-image{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-repeat: none;
+    background-size: cover;
+  }
+
+  .author-name {
+    font-weight: bold;
+    margin-left: 0.5rem;
+  }
+  
+  /* Post Image */
+  .post-image {
+    width: 544px;
+    height: 306px;
+    margin-top: 10px;
+  }
+  
+  /* Post Text Meta */
+  .post-text-meta {
+    margin-top: 10px;
+    width: 544px;
+  }
+  
+  /* Post Buttons */
+  .post-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    margin-top: 1.5vh;
+    margin-bottom: 1.5vh;
+    width: 40%;
+  }
+  
+  /* Like, View, and Comment Counters */
+  .post-num-likes,
+  .post-num-views,
+  .post-num-comments {
+    width: 116px;
+    height: 65px;
+    background-color: #d9d9d9;
+    border-radius: 16px;
+  }
+  
+  .post-num-views,
+  .post-num-comments {
+    margin-left: 1vw;
+  }
+  
+  .post-num-likes:hover,
+  .post-num-likes *:hover {
+    cursor: pointer;
+  }
+  
+  .post-num-likes *,
+  .post-num-views *,
+  .post-num-comments * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    background-color: transparent;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  /* Post Write Comment */
+  .post-write-comment {
+    margin-top: 20px;
+    width: 592px;
+    height: 169px;
+  }
+  
+  .post-write-comment-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+  }
+  
+  .post-write-comment-body textarea {
+    width: 100%;
+    height: 10vh;
+    resize: none;
+  }
+  
+  .post-write-comment-body button {
+    display: flex;
+    background-color: #ACA0EB;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    height: 39px;
+    width: 138px;
+    margin-top: 1vh;
+    justify-content: center;
+    align-items: center;
+    cursor: not-allowed;
+  }
+  
+  .post-write-comment-body button:not(:disabled):hover {
+    cursor: pointer;
+  }
+  
+  /* Comment Section */
+  #comment-section {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Modal Overlays */
+  .post-modal-overlay,
+  .comment-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-title {
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .modal-subtitle {
+    background-color: transparent;
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 16px;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .modal-buttons button {
+    width: 48%;
+    padding: 10px 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #commentCancelButton,
+  #postCancelButton {
+    background-color: black;
+    color: white;
+  }
+  
+  #commentConfirmButton,
+  #postConfirmButton {
+    background-color: #ACA0EB;
+    color: white;
+  }
