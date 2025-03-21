@@ -42,18 +42,14 @@ jobs:
         push: true
         tags: lerelais0102/katebu:latest
 
-    - name: Docker Compose Deploy to EC2
+    - name: Deploy to EC2 via SSH
       uses: appleboy/ssh-action@v1.0.0
       with:
-       host: ${{ secrets.EC2_HOST }}
-       username: ${{ secrets.EC2_USER }}
-       key: ${{ secrets.EC2_PRIVATE_KEY }}
-       script: |
-        docker stop katebu || true
-        docker rm katebu || true
-        docker pull lerelais0102/katebu:latest
-        docker run -d --name katebu -p 80:8080 \
-        -e SPRING_DATASOURCE_URL="${{ secrets.SPRING_DATASOURCE_URL }}" \
-        -e SPRING_DATASOURCE_USERNAME="${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
-        -e SPRING_DATASOURCE_PASSWORD="${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
-        lerelais0102/katebu:latest
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
+          docker pull lerelais0102/katebu:latest
+          docker stop katebu || true
+          docker rm katebu || true
+          docker run -d --name katebu -p 80:8080 lerelais0102/katebu:latest
