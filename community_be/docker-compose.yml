@@ -43,7 +43,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy  # ✅ healthcheck 완료 후 실행
-
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kakaobootcamp?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: root
