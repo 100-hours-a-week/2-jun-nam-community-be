@@ -35,6 +35,7 @@ jobs:
 
     - name: Grand execute permission for gradlew
       run: chmod +x ./gradlew 
+      working-directory: ./2-jun-nam-community-be/community-be
       
     - name: Build with Gradle Wrapper
       run: ./gradlew build
