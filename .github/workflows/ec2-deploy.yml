@@ -41,15 +41,24 @@ jobs:
         context: ./community_be
         push: true
         tags: lerelais0102/katebu:latest
-
-    - name: Deploy to EC2 via SSH
+    - name: Copy docker-compose.yml and .env to EC2
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        port: 22
+        source: "./docker-compose.yml,./.env"
+        target: "/home/ubuntu/app"
+  
+    - name: Deploy using docker-compose
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
-          docker pull lerelais0102/katebu:latest
-          docker stop katebu || true
-          docker rm katebu || true
-          docker run -d --name katebu -p 80:8080 lerelais0102/katebu:latest
+          cd /home/ubuntu/app
+          docker-compose pull
+          docker-compose down
+          docker-compose up -d
