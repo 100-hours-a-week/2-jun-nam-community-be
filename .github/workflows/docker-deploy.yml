@@ -2,7 +2,7 @@ name: Docker Build and Push
 
 on:
   push:
-    branches: [ main ]  # main 브랜치에 push될 때 실행
+    branches: [ main ]
 
 jobs:
   docker:
@@ -24,6 +24,10 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./community_be         # Dockerfile이 있는 디렉토리
+        context: ./community_be
         push: true
         tags: lerelais0102/katebu:latest
+        build-args: |
+          SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
+          SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}
