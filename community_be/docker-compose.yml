@@ -1,19 +1,6 @@
+version: "3.8"
+
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-container
-    restart: always
-    environment:
-      MYSQL_DATABASE: kakaobootcamp
-      MYSQL_ROOT_PASSWORD: Kubera@naver.com
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
-      start_period: 15s
-  # InfluxDB (k6 결과 수신용)
   influxdb:
     image: influxdb:1.8
     container_name: influxdb
@@ -23,7 +10,6 @@ services:
       - INFLUXDB_DB=k6
       - INFLUXDB_HTTP_AUTH_ENABLED=false
 
-  # Grafana (시각화 대시보드)
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -34,19 +20,14 @@ services:
     depends_on:
       - influxdb
 
-
   community-be:
-    build: .
+    image: lerelais0102/katebu:latest
     container_name: community-be-container
     ports:
       - "8080:8080"
-    depends_on:
-      mysql:
-        condition: service_healthy  # ✅ healthcheck 완료 후 실행
-
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kakaobootcamp?serverTimezone=UTC&characterEncoding=UTF-8
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: Kubera@naver.com
-    volumes:
-      - .:/app
+      SPRING_DATASOURCE_URL: jdbc:mysql://${RDS_HOST}:3306/kakaobootcamp?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: ${RDS_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${RDS_PASSWORD}
+    depends_on:
+      - influxdb
