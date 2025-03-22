@@ -42,28 +42,31 @@ jobs:
         push: true
         tags: lerelais0102/katebu:latest
 
-    - name: List current workspace files
-      run: ls -R
-    
-    - name: Copy docker-compose.yml and .env to EC2
+    - name: Copy docker-compose.yml to EC2
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         port: 22
-        source: |
-         community_be/docker-compose.yml
-         community_be/.env
+        source: "community_be/docker-compose.yml"
         target: "/home/ubuntu/app"
 
-    - name: Deploy using docker-compose
+    - name: Inject .env on EC2 and deploy
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_PRIVATE_KEY }}
+        port: 22
         script: |
+          mkdir -p /home/ubuntu/app
+          cat <<EOF > /home/ubuntu/app/.env
+          RDS_HOST=${{ secrets.RDS_HOST }}
+          RDS_USERNAME=${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
+          EOF
+
           cd /home/ubuntu/app
           docker-compose pull
           docker-compose down
