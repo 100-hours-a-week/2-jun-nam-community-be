@@ -41,6 +41,7 @@ jobs:
         context: ./community_be
         push: true
         tags: lerelais0102/katebu:latest
+
     - name: Copy docker-compose.yml and .env to EC2
       uses: appleboy/scp-action@v0.1.4
       with:
@@ -50,7 +51,7 @@ jobs:
         port: 22
         source: "./docker-compose.yml,./.env"
         target: "/home/ubuntu/app"
-  
+
     - name: Deploy using docker-compose
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -58,7 +59,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
-          cd /home/ubuntu/2-jun-nam-community-be
+          cd /home/ubuntu/app
           docker-compose pull
           docker-compose down
           docker-compose up -d
