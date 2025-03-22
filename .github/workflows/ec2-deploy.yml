@@ -42,6 +42,9 @@ jobs:
         push: true
         tags: lerelais0102/katebu:latest
 
+    - name: List current workspace files
+      run: ls -R
+    
     - name: Copy docker-compose.yml and .env to EC2
       uses: appleboy/scp-action@v0.1.4
       with:
