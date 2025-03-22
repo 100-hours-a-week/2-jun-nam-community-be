@@ -50,8 +50,8 @@ jobs:
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         port: 22
         source: |
-          docker-compose.yml
-          .env
+         community_be/docker-compose.yml
+         community_be/.env
         target: "/home/ubuntu/app"
 
     - name: Deploy using docker-compose
