@@ -67,7 +67,7 @@ jobs:
           RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
           EOF
 
-          cd /home/ubuntu/app
+          cd /home/ubuntu/app/community_be
           docker compose pull
           docker compose down
           docker compose up -d
