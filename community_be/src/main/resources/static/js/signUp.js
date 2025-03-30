@@ -145,8 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   email: email.value,
                   password: password.value,
                   nickname: nickname.value,
-                  profileImage: (imageURL == '') ? '' : `/api/images/users/${profilePic.files[0].name}`,
-                  imageUrl: (imageURL == '') ? '' : `/api/images/users/${profilePic.files[0].name}`,
+                  profileImage: (imageURL == '') ? `/api/images/users/default.jpg` : `/api/images/users/${profilePic.files[0].name}`,
+                  imageUrl: (imageURL == '') ? `/api/images/users/default.jpg` : `/api/images/users/${profilePic.files[0].name}`,
               })
           });
 

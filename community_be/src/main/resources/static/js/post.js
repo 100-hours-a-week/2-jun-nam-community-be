@@ -164,13 +164,13 @@ function setupModals({postId, deletePostBtn, modifyPostBtn}){
 }
 
 function renderPost(userInfo, post, postBody){
-
+    console.log(post.profileImage);
     if(userInfo.id == post.authorId){
       postBody.innerHTML =
       `<div class="author-post-card">
             <h2 class="post-title">${post.title}</h2>
             <div class="post-meta">
-                <div class="author-profile"><img src="${userInfo.profileImage}" id="author-post-image"></div>
+                <div class="author-profile"><img src="${post.profileImage}" id="author-post-image"></div>
                 <div class="author-name">${post.author}</div>
                 <span class="post-date">${convertDate(post.createdAt)}</span>
                 <div class="buttons">
@@ -218,7 +218,7 @@ function renderPost(userInfo, post, postBody){
       `<div class="author-post-card">
             <h2 class="post-title">${post.title}</h2>
             <div class="post-meta">
-                <div class="author-profile"><img src="${userInfo.profileImage}" id="author-post-image"></div>
+                <div class="author-profile"><img src="${post.profileImage}" id="author-post-image"></div>
                 <div class="author-name">${post.author}</div>
                 <span class="post-date">${convertDate(post.createdAt)}</span>
             </div>

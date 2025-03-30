@@ -1,5 +1,6 @@
 package hello.hello_spring.controller;
 
+import hello.hello_spring.dto.comment.CommentRequestDTO;
 import hello.hello_spring.model.Comment;
 import hello.hello_spring.model.Post;
 import hello.hello_spring.model.User;
@@ -7,6 +8,7 @@ import hello.hello_spring.service.CommentService;
 import hello.hello_spring.service.PostService;
 import hello.hello_spring.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,13 +45,24 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createComment(@RequestBody Comment comment, HttpSession httpSession){
+    public ResponseEntity<?> createComment(@RequestBody CommentRequestDTO dto, HttpSession httpSession){
         try {
-            System.out.println("createComment: " + comment.getOnPostId());
-            Post post = postService.findPostById(comment.getOnPostId());
+            Post post = postService.findPostById(dto.getOnPostId());
 
 
-            User user = userService.findUserById(comment.getOnUserId());
+            User user = userService.findUserById(dto.getOnUserId());
+
+            Comment comment = Comment.builder()
+                .author(user.getNickname())
+                .profileImage(user.getProfileImage())
+                .content(dto.getContent())
+                .onPostId(post.getId())
+                .onUserId(user.getId())
+                .modifiedAt(LocalDateTime.now())
+                .post(post)
+                .user(user)
+                .build();
+
             post.addComment(comment);
             user.addComment(comment);
             commentService.saveComment(comment);
@@ -63,7 +76,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long id, HttpSession httpSession){
+    public ResponseEntity<?> deleteComment(@PathVariable("id") Long id, HttpSession httpSession){
         try{
             Long userId = (Long)httpSession.getAttribute("id");
             commentService.deleteComment(id, userId);
@@ -78,7 +91,7 @@ public class CommentController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> modify(@PathVariable Long id, @RequestBody Comment comment){
+    public ResponseEntity<?> modify(@PathVariable("id") Long id, @RequestBody CommentRequestDTO comment){
         try{
             Comment targetComment = commentService.findById(id);
             targetComment.setContent(comment.getContent());

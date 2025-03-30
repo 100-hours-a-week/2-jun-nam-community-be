@@ -1,5 +1,6 @@
 package hello.hello_spring.controller;
 
+import hello.hello_spring.dto.post.PostRequestDTO;
 import hello.hello_spring.model.Post;
 import hello.hello_spring.model.User;
 import hello.hello_spring.repository.PostRepository;
@@ -7,6 +8,7 @@ import hello.hello_spring.repository.UserRepository;
 import hello.hello_spring.service.PostService;
 import hello.hello_spring.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +30,25 @@ public class PostController {
 
     @PostMapping("/posts")
     @ResponseBody
-    public ResponseEntity<?> createPost(@RequestBody Post post, HttpSession httpSession){
+    public ResponseEntity<?> createPost(@RequestBody PostRequestDTO postDto, HttpSession httpSession){
         try{
-            System.out.println(post);
             User user = (User)httpSession.getAttribute("user");
-            System.out.println("[debug in /posts controller] : " + user.getNickname());
 
-            post.setUser(user);
-            post.setAuthorId(user.getId());
+            Post post = new Post(
+                postDto.getTitle(),
+                postDto.getContent(),
+                user.getNickname(),         // author
+                LocalDateTime.now(),        // createdAt
+                LocalDateTime.now(),        // modifiedAt
+                0,                          // likeCount
+                0,                          // commentCount
+                0,                          // viewCount
+                user.getId(),               // authorId
+                user.getProfileImage(),     // profileImage
+                postDto.getPostImageUrl(),      // postImageUrl
+                user
+            );
+
             postService.savePost(post);
 
             HttpHeaders headers = new HttpHeaders();
@@ -80,10 +93,6 @@ public class PostController {
     @ResponseBody
     public List<Post> getPosts(){
         List<Post> posts = postService.findActivePost();
-
-        if(posts.isEmpty()){
-            System.out.println("no posts yet");
-        }
         return posts;
     }
 
@@ -91,12 +100,11 @@ public class PostController {
     @ResponseBody
     public ResponseEntity<?> patchPost(@PathVariable("id") Long id, @RequestBody Post post){
         try {
-            System.out.println(post.getTitle() + " " + post.getContent());
             Post targetPost = postService.findPostById(id);
 
             targetPost.setTitle(post.getTitle());
             targetPost.setContent(post.getContent());
-            postRepository.save(targetPost);
+            postService.savePost(targetPost);
             return ResponseEntity.ok(targetPost);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("페이지를 찾을 수 없습니다");
@@ -110,7 +118,7 @@ public class PostController {
             User user = (User)httpSession.getAttribute("user");
             post.updateCommentCount();
             postService.viewPost(id, user.getId());
-            postRepository.save(post);
+            postService.savePost(post);
             return "/html/post.html";
         } catch (IllegalArgumentException e) {
             return "/html/index.html";
@@ -120,7 +128,7 @@ public class PostController {
 
     @DeleteMapping("/posts/{id}")
     @ResponseBody
-    public ResponseEntity<?> deletePost(@PathVariable Long id, HttpSession httpSession){
+    public ResponseEntity<?> deletePost(@PathVariable("id") Long id, HttpSession httpSession){
         try {
             User user = (User)httpSession.getAttribute("user");
             postService.deletePost(id, user);
@@ -136,7 +144,7 @@ public class PostController {
 
     @PostMapping("/posts/{id}/like")
     @ResponseBody
-    public ResponseEntity<?> likePost(@PathVariable Long id, HttpSession httpSession){
+    public ResponseEntity<?> likePost(@PathVariable("id") Long id, HttpSession httpSession){
         try{
             postService.setLike(id);
             Post post = postRepository.findById(id)

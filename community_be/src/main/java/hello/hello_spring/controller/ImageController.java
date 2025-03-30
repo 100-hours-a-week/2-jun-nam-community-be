@@ -89,7 +89,7 @@ import java.nio.file.StandardCopyOption;
 
 
         @GetMapping("/users/{filename}")
-        public ResponseEntity<Resource> getUserImage(@PathVariable String filename) {
+        public ResponseEntity<Resource> getUserImage(@PathVariable("filename") String filename) {
             try {
                 Path filePath = userUploadPath.resolve(filename).normalize();
                 Resource resource = new UrlResource(filePath.toUri());
@@ -105,7 +105,7 @@ import java.nio.file.StandardCopyOption;
         }
 
         @GetMapping("/posts/{filename}")
-        public ResponseEntity<Resource> getPostImage(@PathVariable String filename) {
+        public ResponseEntity<Resource> getPostImage(@PathVariable("filename") String filename) {
             try {
                 Path filePath = postUploadPath.resolve(filename).normalize();
                 Resource resource = new UrlResource(filePath.toUri());
@@ -120,8 +120,8 @@ import java.nio.file.StandardCopyOption;
             }
         }
 
-        @DeleteMapping("/users/{fileName}")
-        public ResponseEntity<String> deleteUserImage(@PathVariable String fileName) {
+        @DeleteMapping("/users/{filename}")
+        public ResponseEntity<String> deleteUserImage(@PathVariable("filename") String fileName) {
             try {
                 if (fileName == null || fileName.isEmpty()) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일명이 유효하지 않습니다.");
@@ -141,8 +141,8 @@ import java.nio.file.StandardCopyOption;
             }
         }
 
-        @DeleteMapping("/posts/{fileName}")
-        public ResponseEntity<String> deletePostImage(@PathVariable String fileName) {
+        @DeleteMapping("/posts/{filename}")
+        public ResponseEntity<String> deletePostImage(@PathVariable("filename") String fileName) {
             try {
                 if (fileName == null || fileName.isEmpty()) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일명이 유효하지 않습니다.");

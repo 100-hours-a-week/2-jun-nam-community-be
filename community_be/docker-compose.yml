@@ -1,33 +1,33 @@
 version: "3.8"
 
 services:
-  influxdb:
-    image: influxdb:1.8
-    container_name: influxdb
+  mysql:
+    image: mysql:8.0
+    container_name: local-mysql
     ports:
-      - "8086:8086"
+      - "3306:3306"
     environment:
-      - INFLUXDB_DB=k6
-      - INFLUXDB_HTTP_AUTH_ENABLED=false
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql-data:/var/lib/mysql
 
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    depends_on:
-      - influxdb
-
-  community-be:
-    image: lerelais0102/katebu:latest
-    container_name: community-be-container
+  v1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: community-v1
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://${RDS_HOST}:3306/kakaobootcamp?serverTimezone=UTC&characterEncoding=UTF-8
-      SPRING_DATASOURCE_USERNAME: ${RDS_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${RDS_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:mysql://${SPRING_DATASOURCE_HOST}:${SPRING_DATASOURCE_PORT}/${SPRING_DATASOURCE_DB}?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     depends_on:
-      - influxdb
+      - mysql
+    volumes:
+      - uploads:/uploads
+
+volumes:
+  mysql-data:
+  uploads:
