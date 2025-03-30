@@ -273,7 +273,8 @@ const response = await fetch('http://localhost:8080/api/data')
 ```
 
 수행 결과 
+<img width="1502" alt="스크린샷 2025-03-30 오후 11 01 31" src="https://github.com/user-attachments/assets/22be0701-c8c7-4e81-9fee-9f3fda4ed3c7" />
 
 
 ### **4. 프로젝트 시연 영상
-![demo](./demo.gif)
+[![Demo Video](https://youtu.be/MZMSUfAWnyg)
