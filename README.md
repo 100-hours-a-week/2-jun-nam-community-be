@@ -272,4 +272,8 @@ const response = await fetch('http://localhost:8080/api/data')
 5. /build/jacoco/index/index.html을 통해 테스트 커버리지를 확인합니다.
 ```
 
+수행 결과 
+
+
 ### **4. 프로젝트 시연 영상
+![demo](./demo.gif)
