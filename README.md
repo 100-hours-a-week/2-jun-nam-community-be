@@ -277,4 +277,4 @@ const response = await fetch('http://localhost:8080/api/data')
 
 
 ### **4. 프로젝트 시연 영상
-[![Demo Video](https://youtu.be/MZMSUfAWnyg)
+[▶ 영상 보기](https://youtu.be/MZMSUfAWnyg)
