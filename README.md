@@ -107,7 +107,7 @@ community_be/
 ```
 
 ---
-<details> 5 ~ 6주차 과제 개요 
+</details> 5 ~ 6주차 과제 개요 
 
 # Week 7 & 8. 과제 구현물 고도화
 
