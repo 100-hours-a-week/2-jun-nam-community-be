@@ -38,3 +38,8 @@ out/
 
 ### env file
 .env
+
+/v1
+/v2
+/v3
+/k6tests

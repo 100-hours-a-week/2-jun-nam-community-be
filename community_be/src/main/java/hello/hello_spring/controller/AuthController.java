@@ -1,5 +1,7 @@
 package hello.hello_spring.controller;
 
+import hello.hello_spring.dto.auth.AuthRequestDTO;
+import hello.hello_spring.dto.auth.AuthResponseDTO;
 import hello.hello_spring.model.Auth;
 import hello.hello_spring.model.User;
 import hello.hello_spring.service.UserService;
@@ -22,10 +24,9 @@ public class AuthController {
     }
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<?> getUserData(@RequestBody Auth auth, HttpSession session){
+    public ResponseEntity<?> getUserData(@RequestBody AuthRequestDTO auth, HttpSession session){
         try{
             User user = userService.findUser(auth.getEmail(), auth.getPassword());
-            System.out.println("[debug in authcontroller ] : " + user.getId());
             if (user != null) {
                 session.setAttribute("user", user);
                 HttpHeaders headers = new HttpHeaders();
@@ -48,12 +49,18 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getUserSession(HttpSession session){
         User user = (User)session.getAttribute("user");
-        System.out.println("[dubeg]: user Id : " + user.getId());
         if(user == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 정보 없음");
         }
-        System.out.println("[dubeg2]: user Id : " + user.getId());
-        return ResponseEntity.ok(user);
+
+        AuthResponseDTO response = new AuthResponseDTO(
+            user.getId(),
+            user.getEmail(),
+            user.getNickname(),
+            user.getProfileImage()
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/logout")

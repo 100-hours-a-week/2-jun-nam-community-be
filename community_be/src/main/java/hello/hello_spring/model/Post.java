@@ -16,6 +16,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long postId;
+
     private String title;
     private String content;
     private String author;
@@ -45,6 +46,27 @@ public class Post {
 
     public void softDelete() {
         this.deletedAt = LocalDateTime.now(); // 현재 시간으로 설정하여 논리적 삭제
+    }
+
+    public Post(){
+
+    }
+
+    public Post(String title, String content, String author, LocalDateTime createdAt,
+                LocalDateTime modifiedAt, Integer likeCount, Integer commentCount,
+                Integer viewCount, Long authorId, String profileImage, String postImageUrl, User user) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.likeCount = likeCount;
+        this.commentCount = commentCount;
+        this.viewCount = viewCount;
+        this.authorId = authorId;
+        this.profileImage = profileImage;
+        this.postImageUrl = postImageUrl;
+        this.user = user;
     }
 
     public Long getId() {

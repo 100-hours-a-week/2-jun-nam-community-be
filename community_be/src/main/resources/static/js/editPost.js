@@ -97,8 +97,8 @@ function setupPostEditHandler(userInfo, { postId, editForm, postTitle, postInput
         e.preventDefault();
         console.log("debug setpostedithandler :");
         try {
-            const redirectURL = await editPost(postId, userInfo, postTitle.value, postInput.value);
-            location.href = redirectURL;
+            await editPost(postId, userInfo, postTitle.value, postInput.value);
+            location.href = `/posts/${postId}`;
         } catch (error) {
             console.error('네트워크 오류:', error);
         }

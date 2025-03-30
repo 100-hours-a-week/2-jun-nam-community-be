@@ -82,6 +82,9 @@ async function loadPosts(postList) {
         if (!response.ok) throw new Error('서버와의 연결이 원활하지 않습니다');
 
         const posts = await response.json();
+
+        posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
         if (posts.length === 0) {
             postList.innerHTML = "등록된 게시글이 없습니다";
             return;

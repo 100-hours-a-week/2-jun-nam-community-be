@@ -1,4 +1,4 @@
-package hello.hello_spring;
+package hello.hello_spring.common;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -12,5 +12,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/css/");
         registry.addResourceHandler("/js/**")
                 .addResourceLocations("classpath:/static/js/");
+        registry.addResourceHandler("/api/images/users/**")
+            .addResourceLocations("file:uploads/users/");
+        registry.addResourceHandler("/api/images/posts/**")
+            .addResourceLocations("file:uploads/posts/");
     }
 }

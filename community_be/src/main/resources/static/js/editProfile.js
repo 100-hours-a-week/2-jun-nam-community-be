@@ -72,7 +72,7 @@ function setupModifyNicknameHandler(userInfo, { modifyButton, nickname, nickname
             nicknameError.innerHTML = '&nbsp;';
         }
         try {
-            await modifyUserInfo(userInfo, nickname.value, userInfo.password, profilePicInput);
+            await modifyUserInfo(userInfo, nickname.value, profilePicInput);
             location.href = `/users/${userInfo.id}/edit`;
         } catch (error) {
             console.error('유저 닉네임 수정 실패:', error);
@@ -80,7 +80,7 @@ function setupModifyNicknameHandler(userInfo, { modifyButton, nickname, nickname
     });
 }
 
-async function modifyUserInfo(userInfo, newNickname, password, profilePicInput) {
+async function modifyUserInfo(userInfo, newNickname, profilePicInput) {
     const file = profilePicInput.files[0];
     let imageUrl = '';
     if(file){
@@ -96,7 +96,7 @@ async function modifyUserInfo(userInfo, newNickname, password, profilePicInput) 
     const response = await fetch(`http://localhost:8080/users/${userInfo.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nickname: newNickname, password, profileImage: (imageUrl=='') ? userInfo.imageUrl : `/api/images/users/${file.name}` })
+        body: JSON.stringify({ nickname: newNickname, profileImage: (imageUrl=='') ? userInfo.profileImage : `/api/images/users/${file.name}` })
     });
     if (!response.ok) throw new Error('유저 닉네임 수정 실패');
 }

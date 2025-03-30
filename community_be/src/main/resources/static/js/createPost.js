@@ -101,18 +101,24 @@ async function createPost(userInfo, title, content) {
     const fileInput = document.getElementById('create-post-body-image-input');
     const postImage = fileInput.files.length > 0 ? fileInput.files[0] : null;
 
-    const formData = new FormData();
-    formData.append("file", postImage);
+    let postImageUrl = null;
 
-    const postImageresponse = await fetch("/api/images/posts", {
-        method: "POST",
-        body: formData
-    });
-    const postUrl = await postImageresponse.text();
-    if(!postImageresponse.ok){
-        throw new Error('네트워크에 문제가 발생했습니다');
-        return;
-    };
+    if (postImage) {
+        const formData = new FormData();
+        formData.append("file", postImage);
+
+        const postImageResponse = await fetch("/api/images/posts", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!postImageResponse.ok) {
+            throw new Error('이미지 업로드에 실패했습니다');
+        }
+
+        postImageUrl = `/api/images/posts/${postImage.name}`;
+    }
+
     const response = await fetch('http://localhost:8080/posts', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -120,21 +126,10 @@ async function createPost(userInfo, title, content) {
         body: JSON.stringify({
             title,
             content,
-            author: userInfo.nickname,
-            createdAt: new Date().toISOString(),
-            modifiedAt: new Date().toISOString(),
-            likeCount: 0,
-            commentCount: 0,
-            viewCount: 0,
-            comments: [],
-            interactions: [],
-            authorId: userInfo.id,
-            profileImage: userInfo.imageUrl,
-            postImageUrl: `/api/images/posts/${postImage.name}`
+            postImageUrl: postImage ? `/api/images/posts/${postImage.name}` : `/api/images/posts/default.jpg`
         })
     });
 
-    if(!postImageresponse.ok) throw new Error('네트워크에 문제가 발생했습니다');
     if (!response.ok) throw new Error('네트워크에 문제가 발생했습니다');
     return response.headers.get("Location");
 }
